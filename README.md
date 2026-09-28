@@ -56,3 +56,8 @@ See [docs/RESEARCH_CONTEXT.md](docs/RESEARCH_CONTEXT.md).
 
 ## License
 MIT. See [LICENSE](LICENSE).
+
+## Extended implementation
+
+- `benchmark.py` — reproducible reference scenarios for independent support vs insufficient support.
+- `tests/test_benchmark.py` — benchmark regression test.
