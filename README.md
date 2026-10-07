@@ -1,63 +1,68 @@
 # Agent Evidence Probes
 
-> Research toolkit for testing whether autonomous-agent actions are supported by fresh, independent, non-conflicting evidence.
+<p align="center">
+  <strong>Evidence-Gated Autonomy for AI Agents</strong><br/>
+  <sub>Testing whether an agent has enough fresh, independent evidence to act.</sub>
+</p>
 
-## Status
-**Reproducible research prototype.** The repository contains executable Python, deterministic tests, and GitHub Actions CI. It does not claim production deployment or external validation.
+<p align="center">
+  <a href="https://github.com/Hafiz-IIT/agent-evidence-probes/actions"><img src="https://img.shields.io/github/actions/workflow/status/Hafiz-IIT/agent-evidence-probes/ci.yml?label=CI" alt="CI"/></a>
+  <img src="https://img.shields.io/badge/status-research%20prototype-blue" alt="Research prototype"/>
+  <img src="https://img.shields.io/badge/license-MIT-green" alt="MIT"/>
+</p>
 
-## Problem
-Agentic systems may authorize consequential actions from stale, circular, weak, or mutually inconsistent evidence. This project makes those failure modes explicit and testable.
+## Research question
 
-## Architecture
-Evidence objects → freshness filtering → provenance/independence grouping → conflict detection → support aggregation → ACT / VERIFY / ESCALATE.
+**When should an autonomous system trust its evidence enough to act—and when should it verify or escalate?**
 
-See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for component responsibilities and invariants.
+This lab turns that question into executable probes around **freshness, provenance, independence, conflict and evidence sufficiency**.
 
-## Quick start
-```bash
-python -m unittest discover -s tests -v
-python agent_evidence_probes.py
+## The decision loop
+
+```
+Evidence
+   ↓
+Freshness + provenance
+   ↓
+Independence / conflict analysis
+   ↓
+Support threshold
+   ↓
+ACT ── VERIFY ── ESCALATE
 ```
 
-## What is implemented
-- Evidence records with provenance groups and TTL
-- Conflict detection
-- Independent-source counting
-- Saturating support aggregation
-- ACT / VERIFY / ESCALATE decision probe
-- Deterministic tests and CI
+The key design choice is that *more evidence is not automatically better evidence*: correlated or stale sources can create false confidence.
 
-## Evaluation
-Synthetic scenarios measure unsafe authorization, conflict handling, evidence independence, and abstention/escalation behavior.
+## Try it
 
-See [docs/EVALUATION.md](docs/EVALUATION.md) for the protocol and falsification criteria.
+```bash
+python agent_evidence_probes.py
+python -m unittest discover -s tests -v
+```
 
-## Research lineage
-This repo is grounded in the recovered long-running research/project discussions and maps to:
-- *Scalable Architectures for Distributed Intelligent Agents*
-- *Ethical & Legal Dimensions of Autonomous Systems*
-- *Human–AI Symbiosis for Future Systems*
+The repository also contains `benchmark.py`, a deterministic reference benchmark covering supported, stale, conflicting and insufficient-evidence cases.
 
-See [docs/RESEARCH_CONTEXT.md](docs/RESEARCH_CONTEXT.md).
+## What is actually implemented
 
-## Repository structure
-- `agent_evidence_probes.py` — executable core
-- `tests/` — deterministic regression tests
-- `docs/` — architecture, research context, evaluation
-- `ROADMAP.md` — next experiments and engineering milestones
-- `CITATION.cff` — citation metadata
-- `.github/workflows/tests.yml` — CI
+- evidence objects with source/provenance metadata
+- freshness filtering
+- source-independence grouping
+- conflict detection
+- support aggregation
+- explicit ACT / VERIFY / ESCALATE outcomes
+- reproducible benchmark cases
+- automated CI
 
-## Limitations
-- Synthetic evidence only
-- No claim of formal safety guarantee
-- No trusted hardware attestation yet
-- Heuristic support aggregation is intentionally simple
+## Research boundary
 
-## License
-MIT. See [LICENSE](LICENSE).
+This is a **research prototype**, not a claim about production agent safety or empirical validation on deployed agents.
 
-## Extended implementation
+## Why it matters
 
-- `benchmark.py` — reproducible reference scenarios for independent support vs insufficient support.
-- `tests/test_benchmark.py` — benchmark regression test.
+This project is one component of a broader research direction: **making autonomous systems evidence-aware before they receive authority to act**.
+
+Related work: [Memory Governor](https://github.com/Hafiz-IIT/memory-governor) · [Safe RL Action Gate](https://github.com/Hafiz-IIT/safe-rl-action-gate) · [~haf.s__ OS Core](https://github.com/Hafiz-IIT/hafs-os-core)
+
+## Reproducibility
+
+The tests are deterministic and run in GitHub Actions. Start with `tests/` and `docs/ARCHITECTURE.md` for the implementation-level specification.
