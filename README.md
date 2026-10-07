@@ -11,6 +11,8 @@
   <img src="https://img.shields.io/badge/license-MIT-green" alt="MIT"/>
 </p>
 
+![Architecture](docs/architecture.svg)
+
 ## Research question
 
 **When should an autonomous system trust its evidence enough to act—and when should it verify or escalate?**
