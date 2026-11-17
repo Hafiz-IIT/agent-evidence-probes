@@ -77,7 +77,7 @@ def detect_conflicts(evidence: Sequence[Evidence]) -> tuple[str, ...]:
         if len(claims) > 1
         for claim in claims
     }
-    return tuple(sorted(conflicts)
+    return tuple(sorted(conflicts))
 
 
 def support_score(evidence: Iterable[Evidence], target_claim: str, now: float | None = None) -> float:
