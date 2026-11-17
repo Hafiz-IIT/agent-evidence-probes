@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from enum import Enum
 from typing import Iterable, Sequence
+import math
 import time
 
 
@@ -20,10 +21,30 @@ class Evidence:
     observed_at: float
     ttl_seconds: float = 3600.0
     independent_group: str | None = None
+    claim_key: str | None = None
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.claim, str) or not self.claim.strip():
+            raise ValueError("claim must be a non-empty string")
+        if not isinstance(self.source, str) or not self.source.strip():
+            raise ValueError("source must be a non-empty string")
+        if not math.isfinite(self.confidence) or not 0.0 <= self.confidence <= 1.0:
+            raise ValueError("confidence must be finite and within [0, 1]")
+        if not math.isfinite(self.observed_at):
+            raise ValueError("observed_at must be finite")
+        if not math.isfinite(self.ttl_seconds) or self.ttl_seconds < 0:
+            raise ValueError("ttl_seconds must be finite and non-negative")
+        if self.independent_group is not None and not self.independent_group.strip():
+            raise ValueError("independent_group cannot be empty")
+        if self.claim_key is not None and not self.claim_key.strip():
+            raise ValueError("claim_key cannot be empty")
 
     def is_fresh(self, now: float | None = None) -> bool:
         now = time.time() if now is None else now
-        return now - self.observed_at <= self.ttl_seconds
+        if not math.isfinite(now):
+            raise ValueError("now must be finite")
+        age = now - self.observed_at
+        return 0.0 <= age <= self.ttl_seconds
 
 
 @dataclass(frozen=True)
@@ -41,16 +62,28 @@ def _normalized_confidence(value: float) -> float:
 
 
 def detect_conflicts(evidence: Sequence[Evidence]) -> tuple[str, ...]:
-    by_source: dict[str, set[str]] = {}
+    # Different propositions are not contradictions. Only compare values that
+    # explicitly refer to the same caller-defined claim key.
+    by_claim_key: dict[str, set[str]] = {}
     for item in evidence:
-        by_source.setdefault(item.independent_group or item.source, set()).add(item.claim.strip().lower())
+        if item.claim_key is None:
+            continue
+        key = item.claim_key.strip().lower()
+        by_claim_key.setdefault(key, set()).add(item.claim.strip().lower())
 
-    all_claims = sorted({claim for claims in by_source.values() for claim in claims})
-    return tuple(all_claims) if len(all_claims) > 1 else ()
+    conflicts = {
+        f"{key}:{claim}"
+        for key, claims in by_claim_key.items()
+        if len(claims) > 1
+        for claim in claims
+    }
+    return tuple(sorted(conflicts))
 
 
 def support_score(evidence: Iterable[Evidence], target_claim: str, now: float | None = None) -> float:
     now = time.time() if now is None else now
+    if not math.isfinite(now) or not isinstance(target_claim, str) or not target_claim.strip():
+        raise ValueError("now must be finite and target_claim must be non-empty")
     target = target_claim.strip().lower()
     usable = [
         e for e in evidence
@@ -80,6 +113,14 @@ def probe(
     now: float | None = None,
 ) -> ProbeResult:
     now = time.time() if now is None else now
+    if not math.isfinite(now):
+        raise ValueError("now must be finite")
+    if not isinstance(target_claim, str) or not target_claim.strip():
+        raise ValueError("target_claim must be non-empty")
+    if not math.isfinite(act_threshold) or not 0.0 <= act_threshold <= 1.0:
+        raise ValueError("act_threshold must be finite and within [0, 1]")
+    if not isinstance(min_independent_sources, int) or isinstance(min_independent_sources, bool) or min_independent_sources < 1:
+        raise ValueError("min_independent_sources must be a positive integer")
     fresh = [e for e in evidence if e.is_fresh(now)]
     matching = [e for e in fresh if e.claim.strip().lower() == target_claim.strip().lower()]
     groups = {e.independent_group or e.source for e in matching}
