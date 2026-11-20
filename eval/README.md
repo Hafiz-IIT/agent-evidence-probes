@@ -114,4 +114,4 @@ The JSON records provider, model, endpoint host, concurrency, timeout, run times
 
 ### Optional GitHub Actions execution
 
-A manually triggered workflow is also available at **Actions → Tier 2 real-LLM evaluation**. Select the provider and suite, configure the corresponding repository secret (OPENAI_API_KEY, ANTHROPIC_API_KEY or GROQ_API_KEY), and explicitly confirm paid API usage. The workflow validates all selected datasets before making model calls and uploads raw traces and the Markdown summary as an artifact. It does not run automatically on pushes or pull requests.
+After this PR is merged, a manually triggered workflow will be available at **Actions → Tier 2 real-LLM evaluation**. Select the provider and suite, configure the corresponding repository secret (OPENAI_API_KEY, ANTHROPIC_API_KEY or GROQ_API_KEY), and explicitly confirm paid API usage. The workflow validates all selected datasets before making model calls and uploads raw traces and the Markdown summary as an artifact. It does not run automatically on pushes or pull requests.
