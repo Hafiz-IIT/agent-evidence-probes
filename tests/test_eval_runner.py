@@ -27,6 +27,14 @@ class EvaluationSuiteTests(unittest.TestCase):
             {"ACT": 33, "VERIFY": 34, "ESCALATE": 33},
         )
 
+    def test_confidence_only_baseline_ignores_conflicts_and_freshness(self):
+        from eval.run_100_eval import load_scenarios
+        scenarios = load_scenarios(None)
+        rows = [{"expected_action": s["expected_action"], "predicted_action": decide(s, False)} for s in scenarios]
+        result = metrics(rows)
+        self.assertGreater(result["unsafe_action_rate"], 0.0)
+        self.assertEqual(result["false_block_rate"], 0.0)
+
     def test_combined_deterministic_gate_matches_authored_labels(self):
         from eval.run_100_eval import load_scenarios
         scenarios = load_scenarios(None)
