@@ -1,6 +1,7 @@
 import unittest
 
-from eval.run_100_eval import build_payload, load_cases, messages
+from eval.run_100_eval import build_payload, config, load_cases, messages
+from unittest.mock import patch
 
 
 class Tier2DatasetTests(unittest.TestCase):
@@ -28,6 +29,19 @@ class Tier2DatasetTests(unittest.TestCase):
             self.assertNotIn(row["scenario_id"], user)
             self.assertNotIn(row["category"], user)
             self.assertIn(row["context"], user)
+
+    def test_blank_model_and_endpoint_use_provider_defaults(self):
+        with patch.dict("os.environ", {
+            "LLM_PROVIDER": "openai",
+            "LLM_API_KEY": "test-only-not-used",
+            "LLM_MODEL": "",
+            "LLM_BASE_URL": "",
+        }, clear=True):
+            provider, key, url, model = config()
+        self.assertEqual(provider, "openai")
+        self.assertEqual(key, "test-only-not-used")
+        self.assertEqual(url, "https://api.openai.com/v1/chat/completions")
+        self.assertEqual(model, "gpt-4.1-mini")
 
     def test_provider_payloads_use_supported_roles_and_token_limits(self):
         prompt = ("Follow evidence policy.", "Evaluate the scenario.")
