@@ -33,8 +33,10 @@ class Evidence:
             raise ValueError("observed_at must be finite")
         if not math.isfinite(float(self.ttl_seconds)) or self.ttl_seconds < 0:
             raise ValueError("ttl_seconds must be finite and non-negative")
-        if self.independent_group is not None and not self.independent_group.strip():
-            raise ValueError("independent_group must be non-empty when supplied")
+        if self.independent_group is not None and (
+            not isinstance(self.independent_group, str) or not self.independent_group.strip()
+        ):
+            raise ValueError("independent_group must be a non-empty string when supplied")
 
     def is_fresh(self, now: float | None = None) -> bool:
         now = time.time() if now is None else now
@@ -107,7 +109,8 @@ def probe(
         raise ValueError("target_claim must be a non-empty string")
     if not math.isfinite(float(act_threshold)) or not 0.0 <= act_threshold <= 1.0:
         raise ValueError("act_threshold must be finite and between 0 and 1")
-    if not isinstance(min_independent_sources, int) or min_independent_sources < 1:
+    if (isinstance(min_independent_sources, bool) or
+            not isinstance(min_independent_sources, int) or min_independent_sources < 1):
         raise ValueError("min_independent_sources must be an integer of at least 1")
     fresh = [e for e in evidence if e.is_fresh(now)]
     matching = [e for e in fresh if e.claim.strip().lower() == target_claim.strip().lower()]
