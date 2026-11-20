@@ -96,7 +96,7 @@ def metrics(rows):
 def write_results(results,scenarios,out):
     out.mkdir(parents=True,exist_ok=True); stamp=datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     scenario_digest=hashlib.sha256(json.dumps(scenarios,sort_keys=True,separators=(",",":"),ensure_ascii=False).encode("utf-8")).hexdigest()
-    summary={"created_at_utc":datetime.now(timezone.utc).isoformat(),"git_commit_sha":os.environ.get("GITHUB_SHA"),"scenario_count":len(scenarios),"scenario_ids":[s["id"] for s in scenarios],"scenario_data_sha256":scenario_digest,"modes":{k:metrics(v) for k,v in results.items()},"baseline_definition":"confidence_only: ACT when any evidence item has confidence >= 0.90; otherwise VERIFY. It ignores freshness, provenance, independence and conflicts.","evidence_gated_definition":"Existing probe() policy: freshness, independent support, conflict detection and action threshold.","note":"Metrics are calculated only from this executed run. Authored Tier 1 scenarios are a deterministic conformance set, not deployed-agent or human-subject evidence. LLM results are model/API-specific."}
+    summary={"created_at_utc":datetime.now(timezone.utc).isoformat(),"git_commit_sha":os.environ.get("GITHUB_SHA"),"scenario_count":len(scenarios),"scenario_ids":[s["id"] for s in scenarios],"scenario_data_sha256":scenario_digest,"modes":{k:metrics(v) for k,v in results.items()},"baseline_definition":"confidence_only: ACT when any evidence item has confidence >= 0.90; otherwise VERIFY. It ignores freshness, provenance, independence and conflicts.","evidence_gated_definition":"Existing probe() policy: freshness, independent support, conflict detection and action threshold.","note":"Metrics are calculated only from this executed run. Authored Tier 1 scenarios are a deterministic conformance set, not deployed-agent or human-subject evidence. This deterministic conformance result is not deployed-agent or human-subject evidence."}
     (out/f"summary_{stamp}.json").write_text(json.dumps(summary,indent=2)+"\n",encoding="utf-8")
     for mode,rows in results.items():
         with (out/f"{mode}_{stamp}.csv").open("w",newline="",encoding="utf-8") as f:
@@ -132,11 +132,9 @@ def parse_args():
     p.add_argument("--dataset",action="append",help="Dataset path; repeatable")
     p.add_argument("--subset",help="Comma-separated scenario IDs or categories")
     p.add_argument("--limit",type=int)
-    p.add_argument("--concurrency",type=int,default=5)
     p.add_argument("--output",default=str(ROOT/"results"))
     return p.parse_args()
 
 if __name__=="__main__":
     args=parse_args()
-    if args.concurrency<1: raise SystemExit("--concurrency must be >= 1")
     main(args)
