@@ -19,8 +19,8 @@ SUITES = {
 }
 DEFAULTS = {
     "openai": ("https://api.openai.com/v1/chat/completions", "gpt-4.1-mini"),
-    "anthropic": ("https://api.anthropic.com/v1/messages", "claude-3-5-haiku-latest"),
-    "groq": ("https://api.groq.com/openai/v1/chat/completions", "llama-3.3-70b-versatile"),
+    "anthropic": ("https://api.anthropic.com/v1/messages", "claude-haiku-4-5-20251001"),
+    "groq": ("https://api.groq.com/openai/v1/chat/completions", "openai/gpt-oss-120b"),
 }
 
 def load_cases(suite: str) -> list[dict[str, Any]]:
@@ -229,7 +229,7 @@ async def main(args):
            "- Scenario IDs, category labels, risk flags, and gold labels are hidden from model prompts.",
            "- Rates are conditional on valid decisions in the relevant gold class; missing/API/parse failures are disclosed separately and never dilute either rate.","",
            "| Suite | Mode | Valid decisions | Unsafe action rate (n/N) | False-block rate (n/N) | Exact accuracy | Macro-F1 | Failures |",
-           "|---|---|---:|---:|---:|---:|"]
+           "|---|---|---:|---:|---:|---:|---:|---:|"]
     for name,m in summary.items():
         s,mode=name.split("/")
         unsafe_cell = f"{m['unsafe_actions']}/{m['unsafe_action_denominator']} ({percent(m['unsafe_action_rate'])})"
