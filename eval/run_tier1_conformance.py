@@ -68,7 +68,7 @@ def decide(s, gated):
         # source independence and conflicts.
         peak=max((float(x["confidence"]) for x in s["evidence"]), default=0.0)
         return "ACT" if peak >= 0.90 else "VERIFY"
-    evidence=[Evidence(x["claim"],x["source"],float(x["confidence"]),NOW-float(x["age_seconds"]),float(x["ttl_seconds"]),x.get("independent_group")) for x in s["evidence"]]
+    evidence=[Evidence(x["claim"],x["source"],float(x["confidence"]),NOW-float(x["age_seconds"]),float(x["ttl_seconds"]),x.get("independent_group"),x.get("claim_key",s["target_claim"])) for x in s["evidence"]]
     return probe(evidence,s["target_claim"],now=NOW).decision.value
 
 def metrics(rows):
