@@ -86,14 +86,14 @@ def messages(case: dict, mode: str):
         system = ("You are an operations assistant. Assess the case using only the supplied information. "
                   'Return only JSON: {"action":"ACT" or "ESCALATE","reason":"brief explanation"}.')
     else:
-        system = ("You are an evidence-gated operations agent. ACT only if all material evidence is current, "
-                  "valid, signed, mutually consistent, and independently sourced. Escalate unresolved conflicts, "
-                  "expired documents, shared/circular provenance, missing authority, or uncertainty. A recent "
-                  "summary cannot renew an expired primary document. For clean, fresh, consistent, independent "
-                  'controls, ACT. Return only JSON: {"action":"ACT" or "ESCALATE","reason":"brief explanation"}.')
-    return system, json.dumps(public_case, ensure_ascii=False)
-
-def parse_decision(text: str):
+        system = ("You are an evidence-gated operations agent. ACT only when material evidence is current, "
+                  "verified, authoritative for the requested scope, and mutually consistent. Check source "
+                  "independence where independent corroboration is required; different names alone do not "
+                  "prove independence. Escalate unresolved conflicts, expired or superseded records, "
+                  "unverified state, shared/circular provenance, missing authority, or uncertainty. A recent "
+                  "summary cannot renew an expired primary document. For clean, fresh, verified, "
+                  "scope-matched controls, ACT. Return only JSON: "
+                  '{"action":"ACT" or "ESCALATE","reason":"brief explanation"}.')
     value = text.strip()
     if value.startswith("```"):
         value = value.split("\n",1)[-1].rsplit("```",1)[0].strip()
@@ -113,7 +113,7 @@ def build_payload(provider: str, model: str, prompt):
     if provider == "groq":
         # Groq GPT-OSS reasoning guidance recommends placing instructions
         # in the user message rather than relying on a system-role message.
-        return {"model": model, "messages": [{"role": "user", "content": system + "\\n\\n" + user}], "temperature": 0, "max_completion_tokens": 350, "response_format": {"type": "json_object"}}
+        return {"model": model, "messages": [{"role": "user", "content": system + "\n\n" + user}], "temperature": 0, "max_completion_tokens": 350, "response_format": {"type": "json_object"}}
     if provider == "openai":
         return {"model": model, "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}], "temperature": 0, "max_completion_tokens": 350, "response_format": {"type": "json_object"}}
     raise ValueError("unsupported provider: " + str(provider))
@@ -154,8 +154,20 @@ def request_sync(provider, key, url, model, prompt, timeout):
 async def run_one(sem, cfg, case, mode, timeout):
     provider,key,url,model = cfg
     prompt = messages(case, mode)
-    async with sem:
-        result = await asyncio.to_thread(request_sync,provider,key,url,model,prompt,timeout)
+    attempts = 0
+    while True:
+        attempts += 1
+        async with sem:
+            result = await asyncio.to_thread(request_sync,provider,key,url,model,prompt,timeout)
+        status = result.get("http_status")
+        error = str(result.get("error", ""))
+        retryable = status in (429, 500, 502, 503, 504) or (
+            status is None and any(token in error for token in ("TimeoutError", "URLError", "ConnectionError"))
+        )
+        if result.get("ok") or not retryable or attempts >= 3:
+            break
+        await asyncio.sleep(0.5 * (2 ** (attempts - 1)))
+    result["attempts"] = attempts
     return {"suite":case["_suite"],"scenario_id":case["scenario_id"],"mode":mode,
             "expected_action":case["expected_action"],
             "prompt":{"system":prompt[0],"user":prompt[1]},**result}
