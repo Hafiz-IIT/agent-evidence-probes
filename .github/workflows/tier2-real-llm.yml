@@ -46,9 +46,9 @@ jobs:
     env:
       LLM_PROVIDER: ${{ inputs.provider }}
       LLM_MODEL: ${{ inputs.model }}
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+      OPENAI_API_KEY: ${{ inputs.provider == 'openai' && secrets.OPENAI_API_KEY || '' }}
+      ANTHROPIC_API_KEY: ${{ inputs.provider == 'anthropic' && secrets.ANTHROPIC_API_KEY || '' }}
+      GROQ_API_KEY: ${{ inputs.provider == 'groq' && secrets.GROQ_API_KEY || '' }}
       EXIM_DATASET_PATH: ${{ github.workspace }}/external/exim/data/exim_real_25.json
       MEMORY_DATASET_PATH: ${{ github.workspace }}/external/memory/data/memory_15.json
       EVAL_SUITE: ${{ inputs.suite }}
