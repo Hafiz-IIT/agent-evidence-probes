@@ -1,7 +1,7 @@
 import unittest
 import json
 
-from eval.run_100_eval import build_payload, config, load_cases, messages, parse_response, run_one
+from eval.run_100_eval import attempted_request_count, build_payload, config, load_cases, messages, parse_response, run_one
 from unittest.mock import patch
 
 
@@ -122,6 +122,7 @@ class Tier2RetryTests(unittest.IsolatedAsyncioTestCase):
             result = await run_one(asyncio.Semaphore(1), ("openai", "key", "url", "model"), case, "baseline", 5)
         self.assertTrue(result["ok"])
         self.assertEqual(result["attempts"], 2)
+        self.assertEqual(attempted_request_count([result]), 2)
 
 if __name__ == "__main__":
     unittest.main()
