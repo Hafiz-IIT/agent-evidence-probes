@@ -105,10 +105,12 @@ def request_sync(provider, key, url, model, prompt, timeout):
 
 async def run_one(sem, cfg, case, mode, timeout):
     provider,key,url,model = cfg
+    prompt = messages(case, mode)
     async with sem:
-        result = await asyncio.to_thread(request_sync,provider,key,url,model,messages(case,mode),timeout)
+        result = await asyncio.to_thread(request_sync,provider,key,url,model,prompt,timeout)
     return {"suite":case["_suite"],"scenario_id":case["scenario_id"],"mode":mode,
-            "expected_action":case["expected_action"],**result}
+            "expected_action":case["expected_action"],
+            "prompt":{"system":prompt[0],"user":prompt[1]},**result}
 
 def metrics(rows):
     # Keep every attempted gold-labelled case in its denominator. A failed or
