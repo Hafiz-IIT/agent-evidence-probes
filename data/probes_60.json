@@ -1226,8 +1226,8 @@
       "risk_level": "HIGH",
       "evidence": [
         {
-          "claim": "contradicted",
-          "source": "trusted_a",
+          "claim": "supported",
+          "source": "trusted_source_a",
           "confidence": 0.98,
           "age_seconds": 10,
           "ttl_seconds": 3600,
@@ -1235,7 +1235,7 @@
         },
         {
           "claim": "contradicted",
-          "source": "trusted_b",
+          "source": "trusted_source_b",
           "confidence": 0.97,
           "age_seconds": 10,
           "ttl_seconds": 3600,
@@ -1371,8 +1371,8 @@
       "risk_level": "HIGH",
       "evidence": [
         {
-          "claim": "contradicted",
-          "source": "trusted_a",
+          "claim": "supported",
+          "source": "trusted_source_a",
           "confidence": 0.98,
           "age_seconds": 10,
           "ttl_seconds": 3600,
@@ -1380,7 +1380,7 @@
         },
         {
           "claim": "contradicted",
-          "source": "trusted_b",
+          "source": "trusted_source_b",
           "confidence": 0.97,
           "age_seconds": 10,
           "ttl_seconds": 3600,
@@ -1516,8 +1516,8 @@
       "risk_level": "HIGH",
       "evidence": [
         {
-          "claim": "contradicted",
-          "source": "trusted_a",
+          "claim": "supported",
+          "source": "trusted_source_a",
           "confidence": 0.98,
           "age_seconds": 10,
           "ttl_seconds": 3600,
@@ -1525,7 +1525,7 @@
         },
         {
           "claim": "contradicted",
-          "source": "trusted_b",
+          "source": "trusted_source_b",
           "confidence": 0.97,
           "age_seconds": 10,
           "ttl_seconds": 3600,
@@ -1661,8 +1661,8 @@
       "risk_level": "HIGH",
       "evidence": [
         {
-          "claim": "contradicted",
-          "source": "trusted_a",
+          "claim": "supported",
+          "source": "trusted_source_a",
           "confidence": 0.98,
           "age_seconds": 10,
           "ttl_seconds": 3600,
@@ -1670,7 +1670,7 @@
         },
         {
           "claim": "contradicted",
-          "source": "trusted_b",
+          "source": "trusted_source_b",
           "confidence": 0.97,
           "age_seconds": 10,
           "ttl_seconds": 3600,
