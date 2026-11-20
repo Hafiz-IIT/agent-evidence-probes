@@ -1,6 +1,6 @@
 import unittest
 
-from eval.run_100_eval import load_cases, messages
+from eval.run_100_eval import build_payload, load_cases, messages
 
 
 class Tier2DatasetTests(unittest.TestCase):
@@ -28,6 +28,20 @@ class Tier2DatasetTests(unittest.TestCase):
             self.assertNotIn(row["scenario_id"], user)
             self.assertNotIn(row["category"], user)
             self.assertIn(row["context"], user)
+
+    def test_provider_payloads_use_supported_roles_and_token_limits(self):
+        prompt = ("Follow evidence policy.", "Evaluate the scenario.")
+        groq = build_payload("groq", "openai/gpt-oss-120b", prompt)
+        self.assertEqual([m["role"] for m in groq["messages"]], ["user"])
+        self.assertIn("Follow evidence policy.", groq["messages"][0]["content"])
+        self.assertEqual(groq["max_completion_tokens"], 350)
+        self.assertNotIn("max_tokens", groq)
+        openai = build_payload("openai", "gpt-4.1-mini", prompt)
+        self.assertEqual([m["role"] for m in openai["messages"]], ["system", "user"])
+        self.assertEqual(openai["max_completion_tokens"], 350)
+        anthropic = build_payload("anthropic", "claude-haiku-4-5-20251001", prompt)
+        self.assertEqual(anthropic["system"], "Follow evidence policy.")
+        self.assertEqual(anthropic["max_tokens"], 350)
 
     def test_both_conditions_receive_identical_case_content(self):
         row = load_cases("probes")[0]
