@@ -2,7 +2,7 @@ import json
 import unittest
 from pathlib import Path
 
-from eval.run_100_eval import decide, metrics
+from eval.run_100_eval import decide, llm_scenario_view, metrics
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -38,6 +38,20 @@ class EvaluationSuiteTests(unittest.TestCase):
             {a: sum(s["expected_action"] == a for s in scenarios) for a in ("ACT", "VERIFY", "ESCALATE")},
             {"ACT": 33, "VERIFY": 34, "ESCALATE": 33},
         )
+
+    def test_llm_input_excludes_expected_label_and_rationale(self):
+        scenario = {
+            "id": "TEST-001", "name": "example", "description": "A synthetic case",
+            "target_claim": "supported", "risk_level": "HIGH",
+            "evidence": [], "expected_action": "ESCALATE",
+            "rationale": "Do not reveal this to the model",
+            "evaluation_mechanism": "fresh_conflicting_claims",
+        }
+        model_input = llm_scenario_view(scenario)
+        self.assertNotIn("expected_action", model_input)
+        self.assertNotIn("rationale", model_input)
+        self.assertNotIn("evaluation_mechanism", model_input)
+        self.assertEqual(model_input["id"], "TEST-001")
 
     def test_multiclass_metrics_include_confusion_matrix_and_macro_f1(self):
         rows = [
