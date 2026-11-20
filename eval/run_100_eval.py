@@ -48,7 +48,7 @@ def config():
 def messages(case: dict, mode: str):
     # Hide every gold-label proxy from the model: IDs, category names, and
     # risk flags encode the answer and would contaminate the benchmark.
-    hidden = {"scenario_id", "category", "risk_flags", "expected_action",
+    hidden = {"scenario_id", "category", "risk_flags", "_suite", "expected_action",
               "expected_rationale", "gold_label", "scoring_notes"}
     public_case = {k:v for k,v in case.items() if k not in hidden}
     if mode == "baseline":
