@@ -60,6 +60,18 @@ class Tier2DatasetTests(unittest.TestCase):
         self.assertIn("--suite", result.stdout)
         self.assertIn("--timeout", result.stdout)
 
+    def test_provider_payloads_use_supported_fields(self):
+        prompt = ("system", "case")
+        openai_payload = EVAL.build_payload("openai", "test-model", prompt)
+        groq_payload = EVAL.build_payload("groq", "test-model", prompt)
+        anthropic_payload = EVAL.build_payload("anthropic", "test-model", prompt)
+        expected_chat = {"model", "messages", "temperature", "max_tokens", "response_format"}
+        self.assertEqual(set(openai_payload), expected_chat)
+        self.assertEqual(set(groq_payload), expected_chat)
+        self.assertEqual(set(anthropic_payload), {"model", "max_tokens", "temperature", "system", "messages"})
+        self.assertNotIn("rate_denominator_policy", openai_payload)
+        self.assertNotIn("rate_denominator_policy", groq_payload)
+
     def test_parser_rejects_non_decision_output(self):
         self.assertEqual(EVAL.parse_decision("not json")["action"], "INVALID")
         self.assertEqual(EVAL.parse_decision('{"action":"ACT","reason":"ok"}')["action"], "ACT")
