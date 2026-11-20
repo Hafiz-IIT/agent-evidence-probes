@@ -97,6 +97,9 @@ def messages(case: dict, mode: str):
     return system, json.dumps(public_case, ensure_ascii=False)
 
 def parse_decision(text: str):
+    return system, json.dumps(public_case, ensure_ascii=False)
+
+def parse_response(text: str):
     value = text.strip()
     if value.startswith("```"):
         value = value.split("\n",1)[-1].rsplit("```",1)[0].strip()
