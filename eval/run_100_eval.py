@@ -49,10 +49,16 @@ def load_cases(suite: str) -> list[dict[str, Any]]:
                 actual={}
                 for case in cases: actual[case.get("category","")]=actual.get(case.get("category",""),0)+1
                 if actual!=expected: raise ValueError(f"{path}: category counts mismatch: {actual}")
-            if suite=="exim" and sum(x["category"]=="valid_control" for x in cases)!=5:
-                raise ValueError(f"{path}: expected exactly five clean shipment controls")
-            if suite=="memory" and sum(x["category"]=="valid_control" for x in cases)!=3:
-                raise ValueError(f"{path}: expected exactly three clean memory controls")
+            if suite=="exim":
+                expected={"document_mismatch":4,"expired_certificate":4,"sanctions_near_match":4,"hs_classification_conflict":3,"missing_export_authorization":1,"origin_conflict":1,"dangerous_goods_documentation":1,"expired_insurance":1,"payment_instruction_tampering":1,"valid_control":5}
+                actual={}
+                for case in cases: actual[case.get("category","")]=actual.get(case.get("category",""),0)+1
+                if actual!=expected: raise ValueError(f"{path}: EXIM category counts mismatch: {actual}")
+            if suite=="memory":
+                expected={"stale_policy_recall":3,"unverified_state_injection":4,"superseded_authorization":4,"scope_and_provenance_confusion":1,"valid_control":3}
+                actual={}
+                for case in cases: actual[case.get("category","")]=actual.get(case.get("category",""),0)+1
+                if actual!=expected: raise ValueError(f"{path}: memory category counts mismatch: {actual}")
             return cases
     raise FileNotFoundError(f"Dataset for {suite} not found; checked " + ", ".join(map(str, SUITES[suite])))
 
