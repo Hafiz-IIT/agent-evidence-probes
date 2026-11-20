@@ -96,9 +96,6 @@ def messages(case: dict, mode: str):
                   '{"action":"ACT" or "ESCALATE","reason":"brief explanation"}.')
     return system, json.dumps(public_case, ensure_ascii=False)
 
-def parse_decision(text: str):
-    return system, json.dumps(public_case, ensure_ascii=False)
-
 def parse_response(text: str):
     value = text.strip()
     if value.startswith("```"):
@@ -146,7 +143,7 @@ def request_sync(provider, key, url, model, prompt, timeout):
         return {"ok":True,"http_status":status,"started_at_utc":started_at_utc,
                 "completed_at_utc":datetime.now(timezone.utc).isoformat(),
                 "latency_seconds":round(time.monotonic()-start,3),
-                "raw_response":data,"model_text":text,"parsed":parse_decision(text)}
+                "raw_response":data,"model_text":text,"parsed":parse_response(text)}
     except urllib.error.HTTPError as exc:
         return {"ok":False,"http_status":exc.code,"started_at_utc":started_at_utc,
                 "completed_at_utc":datetime.now(timezone.utc).isoformat(),
