@@ -26,7 +26,7 @@ on:
         type: string
         required: false
       confirm_api_usage:
-        description: Confirm that this run may make up to 200 paid API requests
+        description: Confirm that this run may make up to 600 paid API attempts (200 primary requests plus at most two retries per case and condition)
         type: boolean
         required: true
         default: false
