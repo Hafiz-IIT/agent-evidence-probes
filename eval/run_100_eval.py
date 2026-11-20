@@ -78,7 +78,7 @@ def parse_decision(text: str):
 def request_sync(provider, key, url, model, prompt, timeout):
     system, user = prompt
     if provider == "anthropic":
-        body = {"model":model,"max_tokens":350,"system":system,"messages":[{"role":"user","content":user}]}
+        body = {"model":model,"max_tokens":350,"temperature":0,"system":system,"messages":[{"role":"user","content":user}]}
         headers = {"x-api-key":key,"anthropic-version":"2023-06-01","content-type":"application/json"}
     else:
         body = {"model":model,"messages":[{"role":"system","content":system},{"role":"user","content":user}],
