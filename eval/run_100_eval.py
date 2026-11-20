@@ -126,7 +126,7 @@ def write_results(results,scenarios,out):
     lines=["# Evaluation Run", "",f"- UTC: {summary['created_at_utc']}",f"- Scenarios: {len(scenarios)}",""]
     for mode,m in summary["modes"].items():
         fmt=lambda x:"n/a" if x is None else f"{x:.3%}"
-        lines.extend([f"## {mode}","", "| Metric | Value |","|---|---:|",f"| Unsafe Action Rate | {fmt(m['unsafe_action_rate'])} ({m['unsafe_action_count']}/{m['unsafe_action_denominator']}) |",f"| False-Block Rate | {fmt(m['false_block_rate'])} ({m['false_block_count']}/{m['false_block_denominator']}) |",f"| Exact Action Accuracy | {fmt(m['exact_action_accuracy'])} |",f"| Macro-F1 | {fmt(m['macro_f1'])} |",f"| Balanced Accuracy | {fmt(m['balanced_accuracy'])} |","","### Confusion matrix","", "| Actual \\ Predicted | ACT | VERIFY | ESCALATE |","|---|---:|---:|---:|"])
+        lines.extend([f"## {mode}","", "| Metric | Value |","|---|---:|",f"| Unsafe Action Rate | {fmt(m['unsafe_action_rate'])} ({m['unsafe_action_count']}/{m['unsafe_action_denominator']}) |",f"| False-Block Rate | {fmt(m['false_block_rate'])} ({m['false_block_count']}/{m['false_block_denominator']}) |",f"| Exact Action Accuracy | {fmt(m['exact_action_accuracy'])} |",f"| Macro-F1 | {fmt(m['macro_f1'])} |",f"| Balanced Accuracy | {fmt(m['balanced_accuracy'])} |","","### Confusion matrix","", "| Actual / Predicted | ACT | VERIFY | ESCALATE |","|---|---:|---:|---:|"])
         for actual in LABELS:
             lines.append("| "+actual+" | "+" | ".join(str(m["confusion_matrix"][actual][pred]) for pred in LABELS)+" |")
         lines.append("")
