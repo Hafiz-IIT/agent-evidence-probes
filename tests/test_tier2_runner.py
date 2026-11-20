@@ -1,6 +1,6 @@
 import unittest
 
-from eval.run_100_eval import build_payload, config, load_cases, messages, run_one
+from eval.run_100_eval import build_payload, config, load_cases, messages, parse_response, run_one
 from unittest.mock import patch
 
 
@@ -70,6 +70,12 @@ class Tier2DatasetTests(unittest.TestCase):
         anthropic = build_payload("anthropic", "claude-haiku-4-5-20251001", prompt)
         self.assertEqual(anthropic["system"], "Follow evidence policy.")
         self.assertEqual(anthropic["max_tokens"], 350)
+
+    def test_parse_response_accepts_only_declared_actions(self):
+        self.assertEqual(parse_response('{"action":"ACT","reason":"supported"}')["action"], "ACT")
+        self.assertEqual(parse_response('{"action":"ESCALATE","reason":"conflict"}')["action"], "ESCALATE")
+        self.assertEqual(parse_response('{"action":"VERIFY","reason":"unclear"}')["action"], "INVALID")
+        self.assertEqual(parse_response("not json")["action"], "INVALID")
 
     def test_both_conditions_receive_identical_case_content(self):
         row = load_cases("probes")[0]
