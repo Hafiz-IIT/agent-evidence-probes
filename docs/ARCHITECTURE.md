@@ -11,6 +11,9 @@ Evidence objects → freshness filtering → provenance/independence grouping �
 1. Conflicting fresh evidence must never silently authorize an action.
 1. Expired evidence must not count as current support.
 
+## Trust boundary
+`independent_group` is a caller-supplied grouping hint, not cryptographic proof of independent origin, acquisition, or administration. Production adapters must authenticate source identity and derive dependency groups from verified provenance; this prototype does not establish those trust properties.
+
 ## Interfaces
 The current prototype intentionally keeps interfaces small and inspectable. Future adapters should preserve provenance, explicit failure states, and testability instead of hiding decisions behind opaque orchestration.
 
