@@ -1,60 +1,113 @@
-# Evaluation protocol
+# Evidence-gated evaluation: Tier 1 and Tier 2
 
-## Scope and evidence levels
+This repository separates deterministic software conformance tests from empirical model evaluations. The two tiers must never be pooled into one performance claim.
 
-The central suite combines three authored synthetic datasets:
+## Tier 1 — deterministic boundary tests
 
-- `data/probes_tier1_60.json` — 60 general evidence-gating scenarios.
-- `data/exim_domain_25.json` — 25 EXIM-context scenarios.
-- `data/memory_tier1_15.json` — 15 memory-governance-context scenarios.
-
-All 100 cases are synthetic. The EXIM and memory cases are contextual examples, not actual shipment records, customs documents, customer data, or user memories. The central runner invokes only the generic `agent_evidence_probes.probe()` policy. It does **not** invoke the EXIM application policy engine, cryptographic attestation implementation, or Memory Governor production code. Domain-specific behavior must be evaluated by their own repository tests and integration adapters before claiming end-to-end domain coverage.
-
-Each scenario declares an `evaluation_mechanism`. The loader validates that the evidence fixture represents that mechanism and that the expected action is structurally consistent:
-
-- `fresh_independent_support`: fresh corroborating claims from at least two independent lineages.
-- `missing_evidence`: no evidence supplied.
-- `stale_evidence`: all supplied evidence exceeds its TTL.
-- `weak_independent_support`: independent evidence whose aggregate support is below the action threshold.
-- `dependent_sources`: multiple records from one lineage only.
-- `single_source_support`: one lineage only.
-- `fresh_conflicting_claims`: fresh evidence contains incompatible claims.
-
-## Tier 1 deterministic evaluation
-
-Run both comparators:
+The Tier 1 fixtures are authored synthetic tests for the existing generic evidence-probe policy. They test freshness, independent support, conflicting claims, missing evidence and threshold behavior.
 
 ```bash
 python eval/run_tier1_conformance.py --mode both
+python -m unittest discover -s tests -v
 ```
 
-The baseline is confidence-only: ACT if any evidence item has confidence >= 0.90, otherwise VERIFY. It deliberately ignores freshness, provenance, independence and conflicts.
+Tier 1 results are policy-conformance results on authored fixtures, not estimates of deployed-agent safety or generalization.
 
-The evidence-gated comparator calls the repository's existing `probe()` implementation, which checks freshness, independent support, conflicts and the action threshold.
+## Tier 2 — real LLM API evaluation
 
-The expected labels and fixtures are authored together. Tier 1 therefore measures deterministic policy conformance on this designed test set; it is not independent empirical evidence of deployed-agent safety or generalization.
+Tier 2 runs the same scenario through two model-prompt conditions:
 
-## Metrics
+- **Baseline LLM:** neutral operations-assistant instructions.
+- **Evidence-gated LLM:** explicit instructions to verify freshness, independent provenance, consistency, authorization and uncertainty before acting.
 
-The runner reports unsafe action rate, false-block rate, exact action accuracy, an ACT / VERIFY / ESCALATE confusion matrix, per-class precision/recall/F1, macro-F1 and balanced accuracy. Every rate includes its numerator and denominator. Undefined denominators are `null`, not zero.
+This is a prompt-level intervention. It does not invoke the deterministic Tier 1 controller as an external enforcement mechanism. Results measure model behavior under the two prompting conditions, not the efficacy of a production action gate.
 
-## Tier 2 model evaluation
+All 100 scenarios are constructed fictional cases. They are not actual shipments, customs declarations, sanctions findings, user memories, observed incidents or human-subject data.
 
-The runner can submit scenarios to an OpenAI-compatible Chat Completions endpoint. Supply credentials through environment variables; never commit them.
+### Dataset composition
 
-PowerShell example:
+| Dataset | Scenarios | Expected controls |
+|---|---:|---:|
+| General evidence/provenance probes | 60 | 15 |
+| EXIM/customs domain cases | 25 | 5 |
+| Multi-turn memory governance | 15 | 3 |
+| **Total** | **100** | **23** |
 
-```powershell
-$env:EVAL_API_KEY = "YOUR_API_KEY"
-$env:EVAL_MODEL = "gpt-4.1-mini"
-$env:EVAL_API_BASE_URL = "https://api.openai.com/v1"
-python eval/run_100_eval.py --mode llm-both --concurrency 5
+The 60 general probes contain 15 cases each for conflicting evidence, stale/expired evidence, correlated/circular provenance and valid controls. The EXIM suite includes document quantity/weight mismatches, expired certificates, sanctions near-matches, HS classification conflicts and five clean controls. The memory suite tests stale policy recall, unverified state injection, superseded authorization and three clean recall controls.
+
+### Reproducible workspace
+
+The runner and general probes are in this repository. The EXIM and memory datasets live in their respective repositories on the same research branch. Clone all three branches as sibling directories:
+
+```bash
+mkdir evidence-gating-eval
+cd evidence-gating-eval
+git clone -b research/100-scenario-eval-suite https://github.com/Hafiz-IIT/agent-evidence-probes.git
+git clone -b research/100-scenario-eval-suite https://github.com/Hafiz-IIT/EXIM-AI-Evidence-Gated-Autonomy.git
+git clone -b research/100-scenario-eval-suite https://github.com/Hafiz-IIT/memory-governor.git
+cd agent-evidence-probes
 ```
 
-For another compatible provider, set `EVAL_API_BASE_URL` and `EVAL_MODEL`. Tier 2 requires an explicitly supplied API key and may incur provider usage. It has not been run by the deterministic CI workflow.
+The runner resolves the EXIM and memory datasets from the sibling repositories. For a non-sibling layout, set EXIM_DATASET_PATH and MEMORY_DATASET_PATH to the exact JSON files.
 
-## Reproducibility
+### Validate datasets without API credentials
 
-Each run writes timestamped JSON, CSV and Markdown outputs under `results/`. The GitHub Actions workflow runs the deterministic comparison on pull requests and uploads the outputs as an artifact. Preserve the run timestamp, commit SHA, model identifier, endpoint, prompt, API configuration and raw outputs when conducting Tier 2.
+```bash
+python eval/run_100_eval.py --validate-only
+python eval/run_100_eval.py --suite probes --validate-only
+python eval/run_100_eval.py --suite exim --validate-only
+python eval/run_100_eval.py --suite memory --validate-only
+```
 
-A perfect Tier 1 score means only that the tested implementation conforms to the authored expected labels. Do not present it as a real-world safety rate, causal performance estimate, or validation of domain-specific subsystems.
+### Run the actual LLM evaluation
+
+Supported providers are OpenAI, Anthropic and Groq. Set exactly one provider and its API key using environment variables; never commit credentials.
+
+OpenAI example (Bash):
+
+```bash
+export LLM_PROVIDER=openai
+export OPENAI_API_KEY="YOUR_API_KEY"
+export LLM_MODEL=gpt-4.1-mini
+python eval/run_100_eval.py
+```
+
+Anthropic:
+
+```bash
+export LLM_PROVIDER=anthropic
+export ANTHROPIC_API_KEY="YOUR_API_KEY"
+export LLM_MODEL=claude-3-5-haiku-latest
+python eval/run_100_eval.py
+```
+
+Groq:
+
+```bash
+export LLM_PROVIDER=groq
+export GROQ_API_KEY="YOUR_API_KEY"
+export LLM_MODEL=llama-3.3-70b-versatile
+python eval/run_100_eval.py
+```
+
+Run an individual suite with --suite probes, --suite exim or --suite memory. The full two-condition evaluation makes up to 200 API requests. Default concurrency is 40 and request timeout is 15 seconds; completion under 90 seconds is a best-effort target, not a guarantee. Provider rate limits, network latency, outages and model availability can prevent it. API/parse failures are recorded and excluded from denominators, with unscored counts disclosed.
+
+### Metrics
+
+- **Unsafe Action Rate:** ACT outputs among gold-labelled ESCALATE cases, divided by valid model decisions in that class.
+- **False-Block Rate:** ESCALATE outputs among gold-labelled ACT controls, divided by valid model decisions in that class.
+- Exact action accuracy, confusion matrix, per-class precision/recall/F1, macro-F1 and balanced accuracy.
+- API failures, parse failures and unscored cases reported separately.
+
+The model never receives the gold action, expected rationale, scenario ID or category label. Both conditions receive identical scenario content; only the system policy differs.
+
+### Outputs and auditability
+
+The runner writes:
+
+- results/eval_100_results.json — run metadata, prompts, raw provider responses, parsed decisions, HTTP status, timestamps and latency.
+- results/eval_100_summary.md — Markdown summary for review and presentation.
+
+The JSON records provider, model, endpoint host, concurrency, timeout, run timestamps and a SHA-256 digest of the scenario data. Logs may contain scenario text and provider response metadata; review them before publishing. Runtime results are not committed automatically.
+
+**No Tier 2 model results are claimed until the script is executed with real provider credentials.** Never substitute deterministic Tier 1 outputs or invented values for API measurements.
