@@ -45,7 +45,7 @@ def validate_scenarios(rows):
             valid={
                 "missing_evidence":len(evidence)==0,
                 "stale_evidence":bool(evidence) and all(float(e["age_seconds"])>float(e["ttl_seconds"]) for e in evidence),
-                "weak_independent_support":len(groups)>=2 and sum(1-(1-float(e["confidence"])) for e in [])==0 and (1-math.prod(1-float(e["confidence"]) for e in evidence))<0.90,
+                "weak_independent_support":len(groups)>=2 and (1-math.prod(1-float(e["confidence"]) for e in evidence))<0.90,
                 "dependent_sources":len(evidence)>=2 and len(groups)==1,
                 "single_source_support":len(evidence)>=1 and len(groups)==1,
             }
