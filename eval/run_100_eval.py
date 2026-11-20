@@ -83,15 +83,20 @@ def parse_decision(text: str):
     except Exception as exc:
         return {"action":"INVALID","reason":f"Unparseable response: {exc}"}
 
-def request_sync(provider, key, url, model, prompt, timeout):
+def build_payload(provider: str, model: str, prompt):
     system, user = prompt
     if provider == "anthropic":
-        body = {"model":model,"max_tokens":350,"temperature":0,"system":system,"messages":[{"role":"user","content":user}]}
+        return {"model": model, "max_tokens": 350, "temperature": 0, "system": system, "messages": [{"role": "user", "content": user}]}
+    if provider in ("openai", "groq"):
+        return {"model": model, "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}], "temperature": 0, "max_tokens": 350, "response_format": {"type": "json_object"}}
+    raise ValueError("unsupported provider: " + str(provider))
+
+def request_sync(provider, key, url, model, prompt, timeout):
+    system, user = prompt
+    body = build_payload(provider, model, prompt)
+    if provider == "anthropic":
         headers = {"x-api-key":key,"anthropic-version":"2023-06-01","content-type":"application/json"}
     else:
-        body = {"model":model,"messages":[{"role":"system","content":system},{"role":"user","content":user}],
-                "temperature":0,"max_tokens":350,
-              "rate_denominator_policy":"valid model decisions in each gold class; missing outputs reported separately","response_format":{"type":"json_object"}}
         headers = {"authorization":f"Bearer {key}","content-type":"application/json"}
     req = urllib.request.Request(url,data=json.dumps(body).encode(),headers=headers,method="POST")
     started_at_utc = datetime.now(timezone.utc).isoformat()
