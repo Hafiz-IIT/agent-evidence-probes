@@ -36,6 +36,16 @@ class Tier2DatasetTests(unittest.TestCase):
         self.assertEqual(result["false_block_rate"], 0.5)
         self.assertEqual(result["api_or_parse_failures"], 2)
 
+    def test_model_prompt_does_not_leak_gold_labels_or_category(self):
+        payload = json.loads((ROOT / "data" / "probes_60.json").read_text(encoding="utf-8"))
+        case = payload["scenarios"][0]
+        _, prompt = EVAL.messages(case, "baseline")
+        self.assertNotIn(case["scenario_id"], prompt)
+        self.assertNotIn(case["category"], prompt)
+        self.assertNotIn("expected_action", prompt)
+        self.assertNotIn("expected_rationale", prompt)
+        self.assertNotIn("risk_flags", prompt)
+
     def test_parser_rejects_non_decision_output(self):
         self.assertEqual(EVAL.parse_decision("not json")["action"], "INVALID")
         self.assertEqual(EVAL.parse_decision('{"action":"ACT","reason":"ok"}')["action"], "ACT")
