@@ -14,6 +14,8 @@ class BenchmarkTests(unittest.TestCase):
         self.assertEqual(result["false_block_rate"], 0.0)
         self.assertEqual(result["unsafe_action_denominator"], 5)
         self.assertEqual(result["valid_control_denominator"], 1)
+        future_case = next(row for row in result["rows"] if row["scenario"] == "future_dated_evidence")
+        self.assertEqual(future_case["actual"], "VERIFY")
 
 
 if __name__ == "__main__":
