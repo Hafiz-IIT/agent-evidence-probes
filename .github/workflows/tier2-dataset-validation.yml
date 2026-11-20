@@ -20,12 +20,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: Hafiz-IIT/EXIM-AI-Evidence-Gated-Autonomy
-          ref: research/tier2-exim-empirical-suite
+          ref: research/100-scenario-eval-suite
           path: external/exim
       - uses: actions/checkout@v4
         with:
           repository: Hafiz-IIT/memory-governor
-          ref: research/tier2-memory-empirical-suite
+          ref: research/100-scenario-eval-suite
           path: external/memory
       - uses: actions/setup-python@v5
         with:
