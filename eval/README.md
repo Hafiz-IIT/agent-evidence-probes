@@ -77,7 +77,7 @@ Anthropic:
 ```bash
 export LLM_PROVIDER=anthropic
 export ANTHROPIC_API_KEY="YOUR_API_KEY"
-export LLM_MODEL=claude-3-5-haiku-latest
+export LLM_MODEL=claude-haiku-4-5-20251001
 python eval/run_100_eval.py
 ```
 
@@ -86,7 +86,7 @@ Groq:
 ```bash
 export LLM_PROVIDER=groq
 export GROQ_API_KEY="YOUR_API_KEY"
-export LLM_MODEL=llama-3.3-70b-versatile
+export LLM_MODEL=openai/gpt-oss-120b
 python eval/run_100_eval.py
 ```
 
