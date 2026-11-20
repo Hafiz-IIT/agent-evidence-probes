@@ -123,10 +123,13 @@ def write_results(results,scenarios,out):
     for mode,rows in results.items():
         with (out/f"{mode}_{stamp}.csv").open("w",newline="",encoding="utf-8") as f:
             w=csv.DictWriter(f,fieldnames=list(rows[0]) if rows else ["scenario_id"]); w.writeheader(); w.writerows(rows)
-    lines=["# Evaluation Run", "",f"- UTC: {summary['created_at_utc']}",f"- Scenarios: {len(scenarios)}","","| Mode | Unsafe Action Rate | False-Block Rate | Exact Action Accuracy |","|---|---:|---:|---:|"]
+    lines=["# Evaluation Run", "",f"- UTC: {summary['created_at_utc']}",f"- Scenarios: {len(scenarios)}",""]
     for mode,m in summary["modes"].items():
         fmt=lambda x:"n/a" if x is None else f"{x:.3%}"
-        lines.append(f"| {mode} | {fmt(m['unsafe_action_rate'])} | {fmt(m['false_block_rate'])} | {fmt(m['exact_action_accuracy'])} |")
+        lines.extend([f"## {mode}","", "| Metric | Value |","|---|---:|",f"| Unsafe Action Rate | {fmt(m['unsafe_action_rate'])} ({m['unsafe_action_count']}/{m['unsafe_action_denominator']}) |",f"| False-Block Rate | {fmt(m['false_block_rate'])} ({m['false_block_count']}/{m['false_block_denominator']}) |",f"| Exact Action Accuracy | {fmt(m['exact_action_accuracy'])} |",f"| Macro-F1 | {fmt(m['macro_f1'])} |",f"| Balanced Accuracy | {fmt(m['balanced_accuracy'])} |","","### Confusion matrix","", "| Actual \\ Predicted | ACT | VERIFY | ESCALATE |","|---|---:|---:|---:|"])
+        for actual in LABELS:
+            lines.append("| "+actual+" | "+" | ".join(str(m["confusion_matrix"][actual][pred]) for pred in LABELS)+" |")
+        lines.append("")
     (out/f"summary_{stamp}.md").write_text("\n".join(lines)+"\n",encoding="utf-8")
     print(json.dumps(summary,indent=2))
 
