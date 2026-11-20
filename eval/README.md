@@ -6,27 +6,27 @@ This runner compares two model-prompt conditions over three constructed scenario
 - exim: 25 fictional EXIM/customs scenarios
 - memory: 15 fictional multi-turn memory/authorization scenarios
 
-The 100 fixtures are synthetic and do not represent real shipments, customs cases, users, memories, or observed incidents. The model responses are empirical API outputs only when you run the script with your own provider credentials.
+The 100 fixtures are synthetic and do not represent real shipments, customs cases, users, memories, or observed incidents. Model responses are empirical API outputs only after you run the script with your own provider credentials.
 
-## Workspace layout
+## Reproducible workspace setup
 
-Clone these three repositories as sibling directories:
+The datasets live on draft research branches in their respective repositories. Clone those exact branches as sibling directories:
 
-    workspace/
-      agent-evidence-probes/
-      EXIM-AI-Evidence-Gated-Autonomy/
-      memory-governor/
+    mkdir ega-tier2-workspace
+    cd ega-tier2-workspace
+    git clone -b research/real-world-100-eval https://github.com/Hafiz-IIT/agent-evidence-probes.git
+    git clone -b research/tier2-exim-empirical-suite https://github.com/Hafiz-IIT/EXIM-AI-Evidence-Gated-Autonomy.git
+    git clone -b research/tier2-memory-empirical-suite https://github.com/Hafiz-IIT/memory-governor.git
 
-Run the script from agent-evidence-probes. The runner reads the EXIM and memory datasets from the sibling repositories. If the sibling repositories are not present, those suites cannot be loaded.
+The runner is in agent-evidence-probes. Do not substitute the default branches until these dataset changes are merged or otherwise made available there.
 
 ## Run
 
-Set one provider and its API key in your shell:
+From the workspace root, set one provider and its API key in your shell, then execute:
 
+    cd agent-evidence-probes
     set LLM_PROVIDER=openai
     set OPENAI_API_KEY=...
-
-Then run:
 
     python eval/run_100_eval.py
     python eval/run_100_eval.py --suite probes
@@ -35,7 +35,7 @@ Then run:
 
 Supported providers are OpenAI, Anthropic and Groq. Override the model with LLM_MODEL and the endpoint with LLM_BASE_URL if required. Never commit API keys.
 
-The default concurrency and per-request timeout are sized for a best-effort run under 90 seconds. External API latency, rate limits, provider outages and retries can still affect elapsed time; the runner does not claim a hard real-time guarantee.
+The default concurrency and per-request timeout are sized for a best-effort run under 90 seconds: 200 requests for the full 100-scenario, two-mode evaluation are dispatched with concurrency 40 and a 15-second per-request timeout. External API latency, provider rate limits, outages and network conditions can still affect elapsed time; this is not a hard real-time guarantee.
 
 ## Conditions and metrics
 
@@ -55,6 +55,6 @@ The runner writes:
 - results/eval_100_results.json — complete request/response traces and metadata
 - results/eval_100_summary.md — Markdown table for review
 
-Review the traces for provider errors, invalid responses, model/version changes and unexpected prompt leakage before publishing results. These files are runtime outputs and are ignored by Git by default.
+The JSON includes prompts, raw provider responses, timestamps, latency, model metadata and parsed decisions. Treat these logs as potentially sensitive because they contain scenario text and provider response metadata. Review them before publishing. Runtime outputs are ignored by Git by default.
 
 No API call results are included in the repository until a user runs the evaluation with valid credentials. Do not invent or pre-fill metrics.
