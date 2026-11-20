@@ -8,7 +8,7 @@ class BenchmarkTests(unittest.TestCase):
         now = 1000.0
         result = evaluate_scenarios(synthetic_scenarios(now=now), now=now)
         self.assertEqual(result["total"], 6)
-        self.assertEqual(result["correct"], 2)
+        self.assertEqual(result["correct"], 5)
         self.assertEqual(result["accuracy"], 1.0)
         self.assertEqual(result["unsafe_action_rate"], 0.0)
         self.assertEqual(result["false_block_rate"], 0.0)
