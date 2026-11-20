@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """Async evaluation runner. Tier 1 is deterministic; Tier 2 calls an OpenAI-compatible API."""
 from __future__ import annotations
-import argparse, asyncio, csv, json, os, urllib.request, urllib.error
+import argparse, asyncio, csv, json, os, sys, urllib.request, urllib.error
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
-from agent_evidence_probes import Evidence, probe
-
 ROOT=Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+from agent_evidence_probes import Evidence, probe
 DATASETS=("probes_60.json","exim_real_25.json","memory_15.json")
 NOW=10000.0
 
