@@ -5,7 +5,7 @@
 The central suite combines three authored synthetic datasets:
 
 - `data/probes_60.json` — 60 general evidence-gating scenarios.
-- `data/exim_real_25.json` — 25 EXIM-context scenarios.
+- `data/exim_domain_25.json` — 25 EXIM-context scenarios.
 - `data/memory_15.json` — 15 memory-governance-context scenarios.
 
 All 100 cases are synthetic. The EXIM and memory cases are contextual examples, not actual shipment records, customs documents, customer data, or user memories. The central runner invokes only the generic `agent_evidence_probes.probe()` policy. It does **not** invoke the EXIM application policy engine, cryptographic attestation implementation, or Memory Governor production code. Domain-specific behavior must be evaluated by their own repository tests and integration adapters before claiming end-to-end domain coverage.
