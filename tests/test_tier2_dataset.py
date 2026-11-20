@@ -1,5 +1,7 @@
 import importlib.util
 import json
+import subprocess
+import sys
 import unittest
 from pathlib import Path
 
@@ -45,6 +47,14 @@ class Tier2DatasetTests(unittest.TestCase):
         self.assertNotIn("expected_action", prompt)
         self.assertNotIn("expected_rationale", prompt)
         self.assertNotIn("risk_flags", prompt)
+
+    def test_runner_cli_help_executes_without_api_credentials(self):
+        result = subprocess.run(
+            [sys.executable, str(ROOT / "eval" / "run_100_eval.py"), "--help"],
+            capture_output=True, text=True, check=True,
+        )
+        self.assertIn("--suite", result.stdout)
+        self.assertIn("--timeout", result.stdout)
 
     def test_parser_rejects_non_decision_output(self):
         self.assertEqual(EVAL.parse_decision("not json")["action"], "INVALID")
