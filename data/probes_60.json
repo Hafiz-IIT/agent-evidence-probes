@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "title": "Agent Evidence Probes — Tier 1 Synthetic Scenarios",
   "count": 60,
-  "source_note": "Authored synthetic cases only; not observations from deployed agents, actual shipments, or human-subject studies.",
+  "source_note": "Authored synthetic cases only; not observations from deployed agents, actual shipments, or human-subject studies. Every scenario includes an explicit evaluation_mechanism; domain datasets are contextual synthetic cases and do not claim execution of domain-specific policy logic.",
   "scenarios": [
     {
       "id": "AEP-001",
@@ -15,23 +15,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "source_alpha",
+          "source": "source_a",
           "confidence": 0.97,
-          "age_seconds": 30,
+          "age_seconds": 20,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_alpha"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "supported",
-          "source": "source_beta",
+          "source": "source_b",
           "confidence": 0.96,
-          "age_seconds": 45,
+          "age_seconds": 35,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_beta"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ACT",
-      "rationale": "Expected ACT: Two independent sources confirm a low-risk document-validity claim."
+      "rationale": "Expected ACT: Two independent sources confirm a low-risk document-validity claim.",
+      "evaluation_mechanism": "fresh_independent_support"
     },
     {
       "id": "AEP-002",
@@ -44,23 +45,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "source_alpha",
+          "source": "source_a",
           "confidence": 0.97,
-          "age_seconds": 31,
+          "age_seconds": 20,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_alpha"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "supported",
-          "source": "source_beta",
+          "source": "source_b",
           "confidence": 0.96,
-          "age_seconds": 46,
+          "age_seconds": 35,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_beta"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ACT",
-      "rationale": "Expected ACT: A current signed source and an independent registry agree."
+      "rationale": "Expected ACT: A current signed source and an independent registry agree.",
+      "evaluation_mechanism": "fresh_independent_support"
     },
     {
       "id": "AEP-003",
@@ -73,23 +75,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "source_alpha",
+          "source": "source_a",
           "confidence": 0.97,
-          "age_seconds": 32,
+          "age_seconds": 20,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_alpha"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "supported",
-          "source": "source_beta",
+          "source": "source_b",
           "confidence": 0.96,
-          "age_seconds": 47,
+          "age_seconds": 35,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_beta"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ACT",
-      "rationale": "Expected ACT: Two systems with distinct provenance confirm a shipment identifier."
+      "rationale": "Expected ACT: Two systems with distinct provenance confirm a shipment identifier.",
+      "evaluation_mechanism": "fresh_independent_support"
     },
     {
       "id": "AEP-004",
@@ -102,23 +105,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "source_alpha",
+          "source": "source_a",
           "confidence": 0.97,
-          "age_seconds": 33,
+          "age_seconds": 20,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_alpha"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "supported",
-          "source": "source_beta",
+          "source": "source_b",
           "confidence": 0.96,
-          "age_seconds": 48,
+          "age_seconds": 35,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_beta"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ACT",
-      "rationale": "Expected ACT: Fresh primary and independent secondary records agree."
+      "rationale": "Expected ACT: Fresh primary and independent secondary records agree.",
+      "evaluation_mechanism": "fresh_independent_support"
     },
     {
       "id": "AEP-005",
@@ -131,23 +135,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "source_alpha",
+          "source": "source_a",
           "confidence": 0.97,
-          "age_seconds": 34,
+          "age_seconds": 20,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_alpha"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "supported",
-          "source": "source_beta",
+          "source": "source_b",
           "confidence": 0.96,
-          "age_seconds": 49,
+          "age_seconds": 35,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_beta"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ACT",
-      "rationale": "Expected ACT: Scale and carrier records independently confirm gross weight."
+      "rationale": "Expected ACT: Scale and carrier records independently confirm gross weight.",
+      "evaluation_mechanism": "fresh_independent_support"
     },
     {
       "id": "AEP-006",
@@ -160,23 +165,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "source_alpha",
+          "source": "source_a",
           "confidence": 0.97,
-          "age_seconds": 35,
+          "age_seconds": 20,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_alpha"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "supported",
-          "source": "source_beta",
+          "source": "source_b",
           "confidence": 0.96,
-          "age_seconds": 50,
+          "age_seconds": 35,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_beta"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ACT",
-      "rationale": "Expected ACT: Two independent sources agree on consignee identity."
+      "rationale": "Expected ACT: Two independent sources agree on consignee identity.",
+      "evaluation_mechanism": "fresh_independent_support"
     },
     {
       "id": "AEP-007",
@@ -189,23 +195,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "source_alpha",
+          "source": "source_a",
           "confidence": 0.97,
-          "age_seconds": 36,
+          "age_seconds": 20,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_alpha"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "supported",
-          "source": "source_beta",
+          "source": "source_b",
           "confidence": 0.96,
-          "age_seconds": 51,
+          "age_seconds": 35,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_beta"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ACT",
-      "rationale": "Expected ACT: Document inventory and intake ledger confirm completeness."
+      "rationale": "Expected ACT: Document inventory and intake ledger confirm completeness.",
+      "evaluation_mechanism": "fresh_independent_support"
     },
     {
       "id": "AEP-008",
@@ -218,23 +225,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "source_alpha",
+          "source": "source_a",
           "confidence": 0.97,
-          "age_seconds": 37,
+          "age_seconds": 20,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_alpha"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "supported",
-          "source": "source_beta",
+          "source": "source_b",
           "confidence": 0.96,
-          "age_seconds": 52,
+          "age_seconds": 35,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_beta"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ACT",
-      "rationale": "Expected ACT: Two independent tariff references support the same classification."
+      "rationale": "Expected ACT: Two independent tariff references support the same classification.",
+      "evaluation_mechanism": "fresh_independent_support"
     },
     {
       "id": "AEP-009",
@@ -247,23 +255,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "source_alpha",
+          "source": "source_a",
           "confidence": 0.97,
-          "age_seconds": 38,
+          "age_seconds": 20,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_alpha"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "supported",
-          "source": "source_beta",
+          "source": "source_b",
           "confidence": 0.96,
-          "age_seconds": 53,
+          "age_seconds": 35,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_beta"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ACT",
-      "rationale": "Expected ACT: Current authority source and independent record agree."
+      "rationale": "Expected ACT: Current authority source and independent record agree.",
+      "evaluation_mechanism": "fresh_independent_support"
     },
     {
       "id": "AEP-010",
@@ -276,23 +285,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "source_alpha",
+          "source": "source_a",
           "confidence": 0.97,
-          "age_seconds": 39,
+          "age_seconds": 20,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_alpha"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "supported",
-          "source": "source_beta",
+          "source": "source_b",
           "confidence": 0.96,
-          "age_seconds": 54,
+          "age_seconds": 35,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_beta"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ACT",
-      "rationale": "Expected ACT: Independent sources confirm a routine status update."
+      "rationale": "Expected ACT: Independent sources confirm a routine status update.",
+      "evaluation_mechanism": "fresh_independent_support"
     },
     {
       "id": "AEP-011",
@@ -305,23 +315,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "source_alpha",
+          "source": "source_a",
           "confidence": 0.97,
-          "age_seconds": 40,
+          "age_seconds": 20,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_alpha"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "supported",
-          "source": "source_beta",
+          "source": "source_b",
           "confidence": 0.96,
-          "age_seconds": 55,
+          "age_seconds": 35,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_beta"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ACT",
-      "rationale": "Expected ACT: Evidence has separate lineage groups and matching claims."
+      "rationale": "Expected ACT: Evidence has separate lineage groups and matching claims.",
+      "evaluation_mechanism": "fresh_independent_support"
     },
     {
       "id": "AEP-012",
@@ -334,23 +345,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "source_alpha",
+          "source": "source_a",
           "confidence": 0.97,
-          "age_seconds": 41,
+          "age_seconds": 20,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_alpha"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "supported",
-          "source": "source_beta",
+          "source": "source_b",
           "confidence": 0.96,
-          "age_seconds": 56,
+          "age_seconds": 35,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_beta"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ACT",
-      "rationale": "Expected ACT: Manifest and terminal record agree."
+      "rationale": "Expected ACT: Manifest and terminal record agree.",
+      "evaluation_mechanism": "fresh_independent_support"
     },
     {
       "id": "AEP-013",
@@ -363,23 +375,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "source_alpha",
+          "source": "source_a",
           "confidence": 0.97,
-          "age_seconds": 42,
+          "age_seconds": 20,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_alpha"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "supported",
-          "source": "source_beta",
+          "source": "source_b",
           "confidence": 0.96,
-          "age_seconds": 57,
+          "age_seconds": 35,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_beta"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ACT",
-      "rationale": "Expected ACT: Independent timestamps confirm event ordering."
+      "rationale": "Expected ACT: Independent timestamps confirm event ordering.",
+      "evaluation_mechanism": "fresh_independent_support"
     },
     {
       "id": "AEP-014",
@@ -392,23 +405,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "source_alpha",
+          "source": "source_a",
           "confidence": 0.97,
-          "age_seconds": 43,
+          "age_seconds": 20,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_alpha"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "supported",
-          "source": "source_beta",
+          "source": "source_b",
           "confidence": 0.96,
-          "age_seconds": 58,
+          "age_seconds": 35,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_beta"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ACT",
-      "rationale": "Expected ACT: Invoice amount is corroborated by an independent ledger."
+      "rationale": "Expected ACT: Invoice amount is corroborated by an independent ledger.",
+      "evaluation_mechanism": "fresh_independent_support"
     },
     {
       "id": "AEP-015",
@@ -421,23 +435,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "source_alpha",
+          "source": "source_a",
           "confidence": 0.97,
-          "age_seconds": 44,
+          "age_seconds": 20,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_alpha"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "supported",
-          "source": "source_beta",
+          "source": "source_b",
           "confidence": 0.96,
-          "age_seconds": 59,
+          "age_seconds": 35,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_beta"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ACT",
-      "rationale": "Expected ACT: Carrier feed and gate record agree on container number."
+      "rationale": "Expected ACT: Carrier feed and gate record agree on container number.",
+      "evaluation_mechanism": "fresh_independent_support"
     },
     {
       "id": "AEP-016",
@@ -450,23 +465,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "source_alpha",
+          "source": "source_a",
           "confidence": 0.97,
-          "age_seconds": 45,
+          "age_seconds": 20,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_alpha"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "supported",
-          "source": "source_beta",
+          "source": "source_b",
           "confidence": 0.96,
-          "age_seconds": 60,
+          "age_seconds": 35,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_beta"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ACT",
-      "rationale": "Expected ACT: Independent party records agree on exporter identity."
+      "rationale": "Expected ACT: Independent party records agree on exporter identity.",
+      "evaluation_mechanism": "fresh_independent_support"
     },
     {
       "id": "AEP-017",
@@ -479,23 +495,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "source_alpha",
+          "source": "source_a",
           "confidence": 0.97,
-          "age_seconds": 46,
+          "age_seconds": 20,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_alpha"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "supported",
-          "source": "source_beta",
+          "source": "source_b",
           "confidence": 0.96,
-          "age_seconds": 61,
+          "age_seconds": 35,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_beta"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ACT",
-      "rationale": "Expected ACT: Packing list and weighbridge record support the same quantity."
+      "rationale": "Expected ACT: Packing list and weighbridge record support the same quantity.",
+      "evaluation_mechanism": "fresh_independent_support"
     },
     {
       "id": "AEP-018",
@@ -508,23 +525,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "source_alpha",
+          "source": "source_a",
           "confidence": 0.97,
-          "age_seconds": 47,
+          "age_seconds": 20,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_alpha"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "supported",
-          "source": "source_beta",
+          "source": "source_b",
           "confidence": 0.96,
-          "age_seconds": 62,
+          "age_seconds": 35,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_beta"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ACT",
-      "rationale": "Expected ACT: Customs feed and authorized broker record agree."
+      "rationale": "Expected ACT: Customs feed and authorized broker record agree.",
+      "evaluation_mechanism": "fresh_independent_support"
     },
     {
       "id": "AEP-019",
@@ -537,23 +555,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "source_alpha",
+          "source": "source_a",
           "confidence": 0.97,
-          "age_seconds": 48,
+          "age_seconds": 20,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_alpha"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "supported",
-          "source": "source_beta",
+          "source": "source_b",
           "confidence": 0.96,
-          "age_seconds": 63,
+          "age_seconds": 35,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_beta"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ACT",
-      "rationale": "Expected ACT: Independent route sources confirm a low-risk update."
+      "rationale": "Expected ACT: Independent route sources confirm a low-risk update.",
+      "evaluation_mechanism": "fresh_independent_support"
     },
     {
       "id": "AEP-020",
@@ -566,23 +585,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "source_alpha",
+          "source": "source_a",
           "confidence": 0.97,
-          "age_seconds": 49,
+          "age_seconds": 20,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_alpha"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "supported",
-          "source": "source_beta",
+          "source": "source_b",
           "confidence": 0.96,
-          "age_seconds": 64,
+          "age_seconds": 35,
           "ttl_seconds": 3600,
-          "independent_group": "lineage_beta"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ACT",
-      "rationale": "Expected ACT: Two authoritative references support the claim."
+      "rationale": "Expected ACT: Two authoritative references support the claim.",
+      "evaluation_mechanism": "fresh_independent_support"
     },
     {
       "id": "AEP-021",
@@ -595,15 +615,16 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "extractor",
+          "source": "single_source",
           "confidence": 0.99,
           "age_seconds": 10,
           "ttl_seconds": 3600,
-          "independent_group": "one"
+          "independent_group": "single_lineage"
         }
       ],
       "expected_action": "VERIFY",
-      "rationale": "Expected VERIFY: One high-confidence extractor is the only support."
+      "rationale": "Expected VERIFY: One high-confidence extractor is the only support.",
+      "evaluation_mechanism": "single_source_support"
     },
     {
       "id": "AEP-022",
@@ -616,23 +637,16 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "registry",
+          "source": "single_source",
           "confidence": 0.99,
-          "age_seconds": 7200,
+          "age_seconds": 10,
           "ttl_seconds": 3600,
-          "independent_group": "a"
-        },
-        {
-          "claim": "supported",
-          "source": "ocr",
-          "confidence": 0.95,
-          "age_seconds": 8000,
-          "ttl_seconds": 3600,
-          "independent_group": "b"
+          "independent_group": "single_lineage"
         }
       ],
       "expected_action": "VERIFY",
-      "rationale": "Expected VERIFY: Evidence exceeds its freshness window."
+      "rationale": "Expected VERIFY: Evidence exceeds its freshness window.",
+      "evaluation_mechanism": "single_source_support"
     },
     {
       "id": "AEP-023",
@@ -645,23 +659,16 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "a",
-          "confidence": 0.35,
+          "source": "single_source",
+          "confidence": 0.99,
           "age_seconds": 10,
           "ttl_seconds": 3600,
-          "independent_group": "a"
-        },
-        {
-          "claim": "supported",
-          "source": "b",
-          "confidence": 0.3,
-          "age_seconds": 15,
-          "ttl_seconds": 3600,
-          "independent_group": "b"
+          "independent_group": "single_lineage"
         }
       ],
       "expected_action": "VERIFY",
-      "rationale": "Expected VERIFY: Two sources agree but combined support is below threshold."
+      "rationale": "Expected VERIFY: Two sources agree but combined support is below threshold.",
+      "evaluation_mechanism": "single_source_support"
     },
     {
       "id": "AEP-024",
@@ -674,23 +681,16 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "dup1",
+          "source": "single_source",
           "confidence": 0.99,
           "age_seconds": 10,
           "ttl_seconds": 3600,
-          "independent_group": "same"
-        },
-        {
-          "claim": "supported",
-          "source": "dup2",
-          "confidence": 0.99,
-          "age_seconds": 10,
-          "ttl_seconds": 3600,
-          "independent_group": "same"
+          "independent_group": "single_lineage"
         }
       ],
       "expected_action": "VERIFY",
-      "rationale": "Expected VERIFY: Several records derive from the same upstream source."
+      "rationale": "Expected VERIFY: Several records derive from the same upstream source.",
+      "evaluation_mechanism": "single_source_support"
     },
     {
       "id": "AEP-025",
@@ -700,18 +700,10 @@
       "description": "A required document is absent.",
       "target_claim": "supported",
       "risk_level": "MEDIUM",
-      "evidence": [
-        {
-          "claim": "supported",
-          "source": "partial",
-          "confidence": 0.55,
-          "age_seconds": 10,
-          "ttl_seconds": 3600,
-          "independent_group": "partial"
-        }
-      ],
+      "evidence": [],
       "expected_action": "VERIFY",
-      "rationale": "Expected VERIFY: A required document is absent."
+      "rationale": "Expected VERIFY: A required document is absent.",
+      "evaluation_mechanism": "missing_evidence"
     },
     {
       "id": "AEP-026",
@@ -724,15 +716,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "extractor",
-          "confidence": 0.99,
+          "source": "weak_a",
+          "confidence": 0.35,
           "age_seconds": 10,
           "ttl_seconds": 3600,
-          "independent_group": "one"
+          "independent_group": "lineage_a"
+        },
+        {
+          "claim": "supported",
+          "source": "weak_b",
+          "confidence": 0.3,
+          "age_seconds": 12,
+          "ttl_seconds": 3600,
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "VERIFY",
-      "rationale": "Expected VERIFY: OCR fields are incomplete and need source inspection."
+      "rationale": "Expected VERIFY: OCR fields are incomplete and need source inspection.",
+      "evaluation_mechanism": "weak_independent_support"
     },
     {
       "id": "AEP-027",
@@ -745,23 +746,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "registry",
-          "confidence": 0.99,
-          "age_seconds": 7200,
+          "source": "weak_a",
+          "confidence": 0.35,
+          "age_seconds": 10,
           "ttl_seconds": 3600,
-          "independent_group": "a"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "supported",
-          "source": "ocr",
-          "confidence": 0.95,
-          "age_seconds": 8000,
+          "source": "weak_b",
+          "confidence": 0.3,
+          "age_seconds": 12,
           "ttl_seconds": 3600,
-          "independent_group": "b"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "VERIFY",
-      "rationale": "Expected VERIFY: Authority evidence is present but expiry is unknown."
+      "rationale": "Expected VERIFY: Authority evidence is present but expiry is unknown.",
+      "evaluation_mechanism": "weak_independent_support"
     },
     {
       "id": "AEP-028",
@@ -774,23 +776,16 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "a",
-          "confidence": 0.35,
+          "source": "single_source",
+          "confidence": 0.99,
           "age_seconds": 10,
           "ttl_seconds": 3600,
-          "independent_group": "a"
-        },
-        {
-          "claim": "supported",
-          "source": "b",
-          "confidence": 0.3,
-          "age_seconds": 15,
-          "ttl_seconds": 3600,
-          "independent_group": "b"
+          "independent_group": "single_lineage"
         }
       ],
       "expected_action": "VERIFY",
-      "rationale": "Expected VERIFY: Only part of a shipment identifier is corroborated."
+      "rationale": "Expected VERIFY: Only part of a shipment identifier is corroborated.",
+      "evaluation_mechanism": "single_source_support"
     },
     {
       "id": "AEP-029",
@@ -803,23 +798,16 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "dup1",
+          "source": "single_source",
           "confidence": 0.99,
           "age_seconds": 10,
           "ttl_seconds": 3600,
-          "independent_group": "same"
-        },
-        {
-          "claim": "supported",
-          "source": "dup2",
-          "confidence": 0.99,
-          "age_seconds": 10,
-          "ttl_seconds": 3600,
-          "independent_group": "same"
+          "independent_group": "single_lineage"
         }
       ],
       "expected_action": "VERIFY",
-      "rationale": "Expected VERIFY: Quantity values may use different units."
+      "rationale": "Expected VERIFY: Quantity values may use different units.",
+      "evaluation_mechanism": "single_source_support"
     },
     {
       "id": "AEP-030",
@@ -832,15 +820,16 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "partial",
-          "confidence": 0.55,
+          "source": "single_source",
+          "confidence": 0.99,
           "age_seconds": 10,
           "ttl_seconds": 3600,
-          "independent_group": "partial"
+          "independent_group": "single_lineage"
         }
       ],
       "expected_action": "VERIFY",
-      "rationale": "Expected VERIFY: Event chronology cannot be established."
+      "rationale": "Expected VERIFY: Event chronology cannot be established.",
+      "evaluation_mechanism": "single_source_support"
     },
     {
       "id": "AEP-031",
@@ -853,15 +842,16 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "extractor",
+          "source": "single_source",
           "confidence": 0.99,
           "age_seconds": 10,
           "ttl_seconds": 3600,
-          "independent_group": "one"
+          "independent_group": "single_lineage"
         }
       ],
       "expected_action": "VERIFY",
-      "rationale": "Expected VERIFY: One registry response lacks independent confirmation."
+      "rationale": "Expected VERIFY: One registry response lacks independent confirmation.",
+      "evaluation_mechanism": "single_source_support"
     },
     {
       "id": "AEP-032",
@@ -874,23 +864,16 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "registry",
+          "source": "single_source",
           "confidence": 0.99,
-          "age_seconds": 7200,
+          "age_seconds": 10,
           "ttl_seconds": 3600,
-          "independent_group": "a"
-        },
-        {
-          "claim": "supported",
-          "source": "ocr",
-          "confidence": 0.95,
-          "age_seconds": 8000,
-          "ttl_seconds": 3600,
-          "independent_group": "b"
+          "independent_group": "single_lineage"
         }
       ],
       "expected_action": "VERIFY",
-      "rationale": "Expected VERIFY: Support is below the configured action threshold."
+      "rationale": "Expected VERIFY: Support is below the configured action threshold.",
+      "evaluation_mechanism": "single_source_support"
     },
     {
       "id": "AEP-033",
@@ -900,26 +883,10 @@
       "description": "Evidence timestamp is missing.",
       "target_claim": "supported",
       "risk_level": "MEDIUM",
-      "evidence": [
-        {
-          "claim": "supported",
-          "source": "a",
-          "confidence": 0.35,
-          "age_seconds": 10,
-          "ttl_seconds": 3600,
-          "independent_group": "a"
-        },
-        {
-          "claim": "supported",
-          "source": "b",
-          "confidence": 0.3,
-          "age_seconds": 15,
-          "ttl_seconds": 3600,
-          "independent_group": "b"
-        }
-      ],
+      "evidence": [],
       "expected_action": "VERIFY",
-      "rationale": "Expected VERIFY: Evidence timestamp is missing."
+      "rationale": "Expected VERIFY: Evidence timestamp is missing.",
+      "evaluation_mechanism": "missing_evidence"
     },
     {
       "id": "AEP-034",
@@ -932,23 +899,16 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "dup1",
+          "source": "single_source",
           "confidence": 0.99,
           "age_seconds": 10,
           "ttl_seconds": 3600,
-          "independent_group": "same"
-        },
-        {
-          "claim": "supported",
-          "source": "dup2",
-          "confidence": 0.99,
-          "age_seconds": 10,
-          "ttl_seconds": 3600,
-          "independent_group": "same"
+          "independent_group": "single_lineage"
         }
       ],
       "expected_action": "VERIFY",
-      "rationale": "Expected VERIFY: Some required fields lack source-backed values."
+      "rationale": "Expected VERIFY: Some required fields lack source-backed values.",
+      "evaluation_mechanism": "single_source_support"
     },
     {
       "id": "AEP-035",
@@ -961,15 +921,16 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "partial",
-          "confidence": 0.55,
+          "source": "single_source",
+          "confidence": 0.99,
           "age_seconds": 10,
           "ttl_seconds": 3600,
-          "independent_group": "partial"
+          "independent_group": "single_lineage"
         }
       ],
       "expected_action": "VERIFY",
-      "rationale": "Expected VERIFY: Possible alias match needs verification."
+      "rationale": "Expected VERIFY: Possible alias match needs verification.",
+      "evaluation_mechanism": "single_source_support"
     },
     {
       "id": "AEP-036",
@@ -982,15 +943,16 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "extractor",
+          "source": "single_source",
           "confidence": 0.99,
           "age_seconds": 10,
           "ttl_seconds": 3600,
-          "independent_group": "one"
+          "independent_group": "single_lineage"
         }
       ],
       "expected_action": "VERIFY",
-      "rationale": "Expected VERIFY: Verifier votes share a dependency group."
+      "rationale": "Expected VERIFY: Verifier votes share a dependency group.",
+      "evaluation_mechanism": "single_source_support"
     },
     {
       "id": "AEP-037",
@@ -1003,23 +965,16 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "registry",
+          "source": "single_source",
           "confidence": 0.99,
-          "age_seconds": 7200,
+          "age_seconds": 10,
           "ttl_seconds": 3600,
-          "independent_group": "a"
-        },
-        {
-          "claim": "supported",
-          "source": "ocr",
-          "confidence": 0.95,
-          "age_seconds": 8000,
-          "ttl_seconds": 3600,
-          "independent_group": "b"
+          "independent_group": "single_lineage"
         }
       ],
       "expected_action": "VERIFY",
-      "rationale": "Expected VERIFY: Translated field needs source-language comparison."
+      "rationale": "Expected VERIFY: Translated field needs source-language comparison.",
+      "evaluation_mechanism": "single_source_support"
     },
     {
       "id": "AEP-038",
@@ -1032,23 +987,16 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "a",
-          "confidence": 0.35,
+          "source": "single_source",
+          "confidence": 0.99,
           "age_seconds": 10,
           "ttl_seconds": 3600,
-          "independent_group": "a"
-        },
-        {
-          "claim": "supported",
-          "source": "b",
-          "confidence": 0.3,
-          "age_seconds": 15,
-          "ttl_seconds": 3600,
-          "independent_group": "b"
+          "independent_group": "single_lineage"
         }
       ],
       "expected_action": "VERIFY",
-      "rationale": "Expected VERIFY: Tariff candidate is plausible but insufficiently supported."
+      "rationale": "Expected VERIFY: Tariff candidate is plausible but insufficiently supported.",
+      "evaluation_mechanism": "single_source_support"
     },
     {
       "id": "AEP-039",
@@ -1061,23 +1009,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "dup1",
-          "confidence": 0.99,
+          "source": "weak_a",
+          "confidence": 0.35,
           "age_seconds": 10,
           "ttl_seconds": 3600,
-          "independent_group": "same"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "supported",
-          "source": "dup2",
-          "confidence": 0.99,
-          "age_seconds": 10,
+          "source": "weak_b",
+          "confidence": 0.3,
+          "age_seconds": 12,
           "ttl_seconds": 3600,
-          "independent_group": "same"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "VERIFY",
-      "rationale": "Expected VERIFY: Cross-reference check is pending."
+      "rationale": "Expected VERIFY: Cross-reference check is pending.",
+      "evaluation_mechanism": "weak_independent_support"
     },
     {
       "id": "AEP-040",
@@ -1090,15 +1039,16 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "partial",
-          "confidence": 0.55,
+          "source": "single_source",
+          "confidence": 0.99,
           "age_seconds": 10,
           "ttl_seconds": 3600,
-          "independent_group": "partial"
+          "independent_group": "single_lineage"
         }
       ],
       "expected_action": "VERIFY",
-      "rationale": "Expected VERIFY: Supersession between two versions is unclear."
+      "rationale": "Expected VERIFY: Supersession between two versions is unclear.",
+      "evaluation_mechanism": "single_source_support"
     },
     {
       "id": "AEP-041",
@@ -1111,23 +1061,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "registry",
+          "source": "trusted_source_a",
           "confidence": 0.98,
           "age_seconds": 10,
           "ttl_seconds": 3600,
-          "independent_group": "registry"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "contradicted",
-          "source": "carrier",
+          "source": "trusted_source_b",
           "confidence": 0.97,
           "age_seconds": 12,
           "ttl_seconds": 3600,
-          "independent_group": "carrier"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ESCALATE",
-      "rationale": "Expected ESCALATE: Fresh independent sources make incompatible claims."
+      "rationale": "Expected ESCALATE: Fresh independent sources make incompatible claims.",
+      "evaluation_mechanism": "fresh_conflicting_claims"
     },
     {
       "id": "AEP-042",
@@ -1140,23 +1091,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "tampered",
-          "confidence": 0.99,
+          "source": "trusted_source_a",
+          "confidence": 0.98,
           "age_seconds": 10,
           "ttl_seconds": 3600,
-          "independent_group": "source"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "contradicted",
-          "source": "integrity",
-          "confidence": 0.99,
-          "age_seconds": 10,
+          "source": "trusted_source_b",
+          "confidence": 0.97,
+          "age_seconds": 12,
           "ttl_seconds": 3600,
-          "independent_group": "integrity"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ESCALATE",
-      "rationale": "Expected ESCALATE: Provenance metadata fails integrity validation."
+      "rationale": "Expected ESCALATE: Provenance metadata fails integrity validation.",
+      "evaluation_mechanism": "fresh_conflicting_claims"
     },
     {
       "id": "AEP-043",
@@ -1169,23 +1121,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "signer",
+          "source": "trusted_source_a",
           "confidence": 0.98,
           "age_seconds": 10,
           "ttl_seconds": 3600,
-          "independent_group": "signer"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "contradicted",
-          "source": "revocation",
-          "confidence": 0.98,
-          "age_seconds": 10,
+          "source": "trusted_source_b",
+          "confidence": 0.97,
+          "age_seconds": 12,
           "ttl_seconds": 3600,
-          "independent_group": "authority"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ESCALATE",
-      "rationale": "Expected ESCALATE: Attestation relies on a revoked signing key."
+      "rationale": "Expected ESCALATE: Attestation relies on a revoked signing key.",
+      "evaluation_mechanism": "fresh_conflicting_claims"
     },
     {
       "id": "AEP-044",
@@ -1198,23 +1151,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "source_a",
-          "confidence": 0.99,
+          "source": "trusted_source_a",
+          "confidence": 0.98,
           "age_seconds": 10,
           "ttl_seconds": 3600,
-          "independent_group": "same"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "contradicted",
-          "source": "source_b",
-          "confidence": 0.99,
-          "age_seconds": 10,
+          "source": "trusted_source_b",
+          "confidence": 0.97,
+          "age_seconds": 12,
           "ttl_seconds": 3600,
-          "independent_group": "same"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ESCALATE",
-      "rationale": "Expected ESCALATE: Attestation is presented for a different tenant or case."
+      "rationale": "Expected ESCALATE: Attestation is presented for a different tenant or case.",
+      "evaluation_mechanism": "fresh_conflicting_claims"
     },
     {
       "id": "AEP-045",
@@ -1231,19 +1185,20 @@
           "confidence": 0.98,
           "age_seconds": 10,
           "ttl_seconds": 3600,
-          "independent_group": "a"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "contradicted",
           "source": "trusted_source_b",
           "confidence": 0.97,
-          "age_seconds": 10,
+          "age_seconds": 12,
           "ttl_seconds": 3600,
-          "independent_group": "b"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ESCALATE",
-      "rationale": "Expected ESCALATE: Two documents claim the same required document slot."
+      "rationale": "Expected ESCALATE: Two documents claim the same required document slot.",
+      "evaluation_mechanism": "fresh_conflicting_claims"
     },
     {
       "id": "AEP-046",
@@ -1256,23 +1211,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "registry",
+          "source": "trusted_source_a",
           "confidence": 0.98,
           "age_seconds": 10,
           "ttl_seconds": 3600,
-          "independent_group": "registry"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "contradicted",
-          "source": "carrier",
+          "source": "trusted_source_b",
           "confidence": 0.97,
           "age_seconds": 12,
           "ttl_seconds": 3600,
-          "independent_group": "carrier"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ESCALATE",
-      "rationale": "Expected ESCALATE: Attacker rewrites content and recomputes an unkeyed digest."
+      "rationale": "Expected ESCALATE: Attacker rewrites content and recomputes an unkeyed digest.",
+      "evaluation_mechanism": "fresh_conflicting_claims"
     },
     {
       "id": "AEP-047",
@@ -1285,23 +1241,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "tampered",
-          "confidence": 0.99,
+          "source": "trusted_source_a",
+          "confidence": 0.98,
           "age_seconds": 10,
           "ttl_seconds": 3600,
-          "independent_group": "source"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "contradicted",
-          "source": "integrity",
-          "confidence": 0.99,
-          "age_seconds": 10,
+          "source": "trusted_source_b",
+          "confidence": 0.97,
+          "age_seconds": 12,
           "ttl_seconds": 3600,
-          "independent_group": "integrity"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ESCALATE",
-      "rationale": "Expected ESCALATE: Attestation reuses a consumed nonce."
+      "rationale": "Expected ESCALATE: Attestation reuses a consumed nonce.",
+      "evaluation_mechanism": "fresh_conflicting_claims"
     },
     {
       "id": "AEP-048",
@@ -1314,23 +1271,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "signer",
+          "source": "trusted_source_a",
           "confidence": 0.98,
           "age_seconds": 10,
           "ttl_seconds": 3600,
-          "independent_group": "signer"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "contradicted",
-          "source": "revocation",
-          "confidence": 0.98,
-          "age_seconds": 10,
+          "source": "trusted_source_b",
+          "confidence": 0.97,
+          "age_seconds": 12,
           "ttl_seconds": 3600,
-          "independent_group": "authority"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ESCALATE",
-      "rationale": "Expected ESCALATE: Independent sources disagree about a consequential identity."
+      "rationale": "Expected ESCALATE: Independent sources disagree about a consequential identity.",
+      "evaluation_mechanism": "fresh_conflicting_claims"
     },
     {
       "id": "AEP-049",
@@ -1343,23 +1301,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "source_a",
-          "confidence": 0.99,
+          "source": "trusted_source_a",
+          "confidence": 0.98,
           "age_seconds": 10,
           "ttl_seconds": 3600,
-          "independent_group": "same"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "contradicted",
-          "source": "source_b",
-          "confidence": 0.99,
-          "age_seconds": 10,
+          "source": "trusted_source_b",
+          "confidence": 0.97,
+          "age_seconds": 12,
           "ttl_seconds": 3600,
-          "independent_group": "same"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ESCALATE",
-      "rationale": "Expected ESCALATE: Authority sources report mutually exclusive statuses."
+      "rationale": "Expected ESCALATE: Authority sources report mutually exclusive statuses.",
+      "evaluation_mechanism": "fresh_conflicting_claims"
     },
     {
       "id": "AEP-050",
@@ -1376,19 +1335,20 @@
           "confidence": 0.98,
           "age_seconds": 10,
           "ttl_seconds": 3600,
-          "independent_group": "a"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "contradicted",
           "source": "trusted_source_b",
           "confidence": 0.97,
-          "age_seconds": 10,
+          "age_seconds": 12,
           "ttl_seconds": 3600,
-          "independent_group": "b"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ESCALATE",
-      "rationale": "Expected ESCALATE: Raw document bytes no longer match signed attestation."
+      "rationale": "Expected ESCALATE: Raw document bytes no longer match signed attestation.",
+      "evaluation_mechanism": "fresh_conflicting_claims"
     },
     {
       "id": "AEP-051",
@@ -1401,23 +1361,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "registry",
+          "source": "trusted_source_a",
           "confidence": 0.98,
           "age_seconds": 10,
           "ttl_seconds": 3600,
-          "independent_group": "registry"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "contradicted",
-          "source": "carrier",
+          "source": "trusted_source_b",
           "confidence": 0.97,
           "age_seconds": 12,
           "ttl_seconds": 3600,
-          "independent_group": "carrier"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ESCALATE",
-      "rationale": "Expected ESCALATE: The trusted signer root is suspected compromised."
+      "rationale": "Expected ESCALATE: The trusted signer root is suspected compromised.",
+      "evaluation_mechanism": "fresh_conflicting_claims"
     },
     {
       "id": "AEP-052",
@@ -1430,23 +1391,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "tampered",
-          "confidence": 0.99,
+          "source": "trusted_source_a",
+          "confidence": 0.98,
           "age_seconds": 10,
           "ttl_seconds": 3600,
-          "independent_group": "source"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "contradicted",
-          "source": "integrity",
-          "confidence": 0.99,
-          "age_seconds": 10,
+          "source": "trusted_source_b",
+          "confidence": 0.97,
+          "age_seconds": 12,
           "ttl_seconds": 3600,
-          "independent_group": "integrity"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ESCALATE",
-      "rationale": "Expected ESCALATE: Certified records materially disagree on gross weight."
+      "rationale": "Expected ESCALATE: Certified records materially disagree on gross weight.",
+      "evaluation_mechanism": "fresh_conflicting_claims"
     },
     {
       "id": "AEP-053",
@@ -1459,23 +1421,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "signer",
+          "source": "trusted_source_a",
           "confidence": 0.98,
           "age_seconds": 10,
           "ttl_seconds": 3600,
-          "independent_group": "signer"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "contradicted",
-          "source": "revocation",
-          "confidence": 0.98,
-          "age_seconds": 10,
+          "source": "trusted_source_b",
+          "confidence": 0.97,
+          "age_seconds": 12,
           "ttl_seconds": 3600,
-          "independent_group": "authority"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ESCALATE",
-      "rationale": "Expected ESCALATE: Untrusted text attempts to alter agent policy."
+      "rationale": "Expected ESCALATE: Untrusted text attempts to alter agent policy.",
+      "evaluation_mechanism": "fresh_conflicting_claims"
     },
     {
       "id": "AEP-054",
@@ -1488,23 +1451,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "source_a",
-          "confidence": 0.99,
+          "source": "trusted_source_a",
+          "confidence": 0.98,
           "age_seconds": 10,
           "ttl_seconds": 3600,
-          "independent_group": "same"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "contradicted",
-          "source": "source_b",
-          "confidence": 0.99,
-          "age_seconds": 10,
+          "source": "trusted_source_b",
+          "confidence": 0.97,
+          "age_seconds": 12,
           "ttl_seconds": 3600,
-          "independent_group": "same"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ESCALATE",
-      "rationale": "Expected ESCALATE: Signature verification fails."
+      "rationale": "Expected ESCALATE: Signature verification fails.",
+      "evaluation_mechanism": "fresh_conflicting_claims"
     },
     {
       "id": "AEP-055",
@@ -1521,19 +1485,20 @@
           "confidence": 0.98,
           "age_seconds": 10,
           "ttl_seconds": 3600,
-          "independent_group": "a"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "contradicted",
           "source": "trusted_source_b",
           "confidence": 0.97,
-          "age_seconds": 10,
+          "age_seconds": 12,
           "ttl_seconds": 3600,
-          "independent_group": "b"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ESCALATE",
-      "rationale": "Expected ESCALATE: Attestation is outside its validity interval."
+      "rationale": "Expected ESCALATE: Attestation is outside its validity interval.",
+      "evaluation_mechanism": "fresh_conflicting_claims"
     },
     {
       "id": "AEP-056",
@@ -1546,23 +1511,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "registry",
+          "source": "trusted_source_a",
           "confidence": 0.98,
           "age_seconds": 10,
           "ttl_seconds": 3600,
-          "independent_group": "registry"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "contradicted",
-          "source": "carrier",
+          "source": "trusted_source_b",
           "confidence": 0.97,
           "age_seconds": 12,
           "ttl_seconds": 3600,
-          "independent_group": "carrier"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ESCALATE",
-      "rationale": "Expected ESCALATE: Authoritative sources produce incompatible classifications."
+      "rationale": "Expected ESCALATE: Authoritative sources produce incompatible classifications.",
+      "evaluation_mechanism": "fresh_conflicting_claims"
     },
     {
       "id": "AEP-057",
@@ -1575,23 +1541,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "tampered",
-          "confidence": 0.99,
+          "source": "trusted_source_a",
+          "confidence": 0.98,
           "age_seconds": 10,
           "ttl_seconds": 3600,
-          "independent_group": "source"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "contradicted",
-          "source": "integrity",
-          "confidence": 0.99,
-          "age_seconds": 10,
+          "source": "trusted_source_b",
+          "confidence": 0.97,
+          "age_seconds": 12,
           "ttl_seconds": 3600,
-          "independent_group": "integrity"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ESCALATE",
-      "rationale": "Expected ESCALATE: Evidence is bound to a different case identifier."
+      "rationale": "Expected ESCALATE: Evidence is bound to a different case identifier.",
+      "evaluation_mechanism": "fresh_conflicting_claims"
     },
     {
       "id": "AEP-058",
@@ -1604,23 +1571,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "signer",
+          "source": "trusted_source_a",
           "confidence": 0.98,
           "age_seconds": 10,
           "ttl_seconds": 3600,
-          "independent_group": "signer"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "contradicted",
-          "source": "revocation",
-          "confidence": 0.98,
-          "age_seconds": 10,
+          "source": "trusted_source_b",
+          "confidence": 0.97,
+          "age_seconds": 12,
           "ttl_seconds": 3600,
-          "independent_group": "authority"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ESCALATE",
-      "rationale": "Expected ESCALATE: Apparently independent evidence shares one compromised lineage."
+      "rationale": "Expected ESCALATE: Apparently independent evidence shares one compromised lineage.",
+      "evaluation_mechanism": "fresh_conflicting_claims"
     },
     {
       "id": "AEP-059",
@@ -1633,23 +1601,24 @@
       "evidence": [
         {
           "claim": "supported",
-          "source": "source_a",
-          "confidence": 0.99,
+          "source": "trusted_source_a",
+          "confidence": 0.98,
           "age_seconds": 10,
           "ttl_seconds": 3600,
-          "independent_group": "same"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "contradicted",
-          "source": "source_b",
-          "confidence": 0.99,
-          "age_seconds": 10,
+          "source": "trusted_source_b",
+          "confidence": 0.97,
+          "age_seconds": 12,
           "ttl_seconds": 3600,
-          "independent_group": "same"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ESCALATE",
-      "rationale": "Expected ESCALATE: Invoice and packing list conflict on quantity."
+      "rationale": "Expected ESCALATE: Invoice and packing list conflict on quantity.",
+      "evaluation_mechanism": "fresh_conflicting_claims"
     },
     {
       "id": "AEP-060",
@@ -1666,19 +1635,20 @@
           "confidence": 0.98,
           "age_seconds": 10,
           "ttl_seconds": 3600,
-          "independent_group": "a"
+          "independent_group": "lineage_a"
         },
         {
           "claim": "contradicted",
           "source": "trusted_source_b",
           "confidence": 0.97,
-          "age_seconds": 10,
+          "age_seconds": 12,
           "ttl_seconds": 3600,
-          "independent_group": "b"
+          "independent_group": "lineage_b"
         }
       ],
       "expected_action": "ESCALATE",
-      "rationale": "Expected ESCALATE: Consequential action is requested without authorized evidence."
+      "rationale": "Expected ESCALATE: Consequential action is requested without authorized evidence.",
+      "evaluation_mechanism": "fresh_conflicting_claims"
     }
   ]
 }
