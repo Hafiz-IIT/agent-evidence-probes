@@ -1,0 +1,31 @@
+name: 100-scenario deterministic evaluation
+
+on:
+  pull_request:
+    paths:
+      - "data/**"
+      - "eval/**"
+      - "agent_evidence_probes.py"
+      - ".github/workflows/evaluation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deterministic-evaluation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Run baseline and evidence-gated modes
+        run: python eval/run_100_eval.py --mode both --output results
+      - name: Upload reproducible run outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: evidence-gating-evaluation-results
+          path: results/
+          if-no-files-found: error
+          retention-days: 30
