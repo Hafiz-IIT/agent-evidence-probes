@@ -27,6 +27,7 @@ class Evidence:
     observed_at: float
     ttl_seconds: float = 3600.0
     independent_group: str | None = None
+    claim_key: str | None = None
 
     def __post_init__(self):
         for name, value in (("claim", self.claim), ("source", self.source)):
@@ -43,6 +44,10 @@ class Evidence:
             not isinstance(self.independent_group, str) or not self.independent_group.strip()
         ):
             raise ValueError("independent_group must be non-empty when supplied")
+        if self.claim_key is not None and (
+            not isinstance(self.claim_key, str) or not self.claim_key.strip()
+        ):
+            raise ValueError("claim_key must be non-empty when supplied")
 
     def is_fresh(self, now: float | None = None) -> bool:
         now = _finite("now", time.time() if now is None else now)
@@ -73,11 +78,21 @@ def detect_conflicts(evidence: Sequence[Evidence]) -> tuple[str, ...]:
         raise ValueError("evidence must be a sequence of Evidence values")
     if any(not isinstance(item, Evidence) for item in evidence):
         raise ValueError("evidence must contain only Evidence values")
-    by_source: dict[str, set[str]] = {}
+    # Different propositions are not contradictions. Only compare claims that
+    # explicitly share a caller-defined claim key.
+    by_claim_key: dict[str, set[str]] = {}
     for item in evidence:
-        by_source.setdefault(item.independent_group or item.source, set()).add(item.claim.strip().casefold())
-    all_claims = sorted({claim for claims in by_source.values() for claim in claims})
-    return tuple(all_claims) if len(all_claims) > 1 else ()
+        if item.claim_key is None:
+            continue
+        key = item.claim_key.strip().casefold()
+        by_claim_key.setdefault(key, set()).add(item.claim.strip().casefold())
+    conflicts = {
+        f"{key}:{claim}"
+        for key, claims in by_claim_key.items()
+        if len(claims) > 1
+        for claim in claims
+    }
+    return tuple(sorted(conflicts))
 
 
 def support_score(evidence: Iterable[Evidence], target_claim: str, now: float | None = None) -> float:
