@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum
+import math
 from typing import Iterable, Sequence
 import time
 
@@ -21,9 +22,27 @@ class Evidence:
     ttl_seconds: float = 3600.0
     independent_group: str | None = None
 
+    def __post_init__(self) -> None:
+        if not isinstance(self.claim, str) or not self.claim.strip():
+            raise ValueError("claim must be a non-empty string")
+        if not isinstance(self.source, str) or not self.source.strip():
+            raise ValueError("source must be a non-empty string")
+        if not math.isfinite(float(self.confidence)) or not 0.0 <= float(self.confidence) <= 1.0:
+            raise ValueError("confidence must be finite and between 0 and 1")
+        if not math.isfinite(float(self.observed_at)):
+            raise ValueError("observed_at must be finite")
+        if not math.isfinite(float(self.ttl_seconds)) or self.ttl_seconds < 0:
+            raise ValueError("ttl_seconds must be finite and non-negative")
+        if self.independent_group is not None and not self.independent_group.strip():
+            raise ValueError("independent_group must be non-empty when supplied")
+
     def is_fresh(self, now: float | None = None) -> bool:
         now = time.time() if now is None else now
-        return now - self.observed_at <= self.ttl_seconds
+        if not math.isfinite(float(now)):
+            raise ValueError("now must be finite")
+        age = now - self.observed_at
+        # Future-dated evidence is not fresh: clock skew must fail closed.
+        return 0.0 <= age <= self.ttl_seconds
 
 
 @dataclass(frozen=True)
@@ -37,7 +56,11 @@ class ProbeResult:
 
 
 def _normalized_confidence(value: float) -> float:
-    return min(1.0, max(0.0, float(value)))
+    # Evidence validates confidence at construction; do not silently clamp malformed input.
+    value = float(value)
+    if not math.isfinite(value) or not 0.0 <= value <= 1.0:
+        raise ValueError("confidence must be finite and between 0 and 1")
+    return value
 
 
 def detect_conflicts(evidence: Sequence[Evidence]) -> tuple[str, ...]:
@@ -80,6 +103,12 @@ def probe(
     now: float | None = None,
 ) -> ProbeResult:
     now = time.time() if now is None else now
+    if not isinstance(target_claim, str) or not target_claim.strip():
+        raise ValueError("target_claim must be a non-empty string")
+    if not math.isfinite(float(act_threshold)) or not 0.0 <= act_threshold <= 1.0:
+        raise ValueError("act_threshold must be finite and between 0 and 1")
+    if not isinstance(min_independent_sources, int) or min_independent_sources < 1:
+        raise ValueError("min_independent_sources must be an integer of at least 1")
     fresh = [e for e in evidence if e.is_fresh(now)]
     matching = [e for e in fresh if e.claim.strip().lower() == target_claim.strip().lower()]
     groups = {e.independent_group or e.source for e in matching}
