@@ -32,10 +32,12 @@ class Tier2DatasetTests(unittest.TestCase):
             {"expected_action": "ACT", "ok": False},
         ]
         result = EVAL.metrics(rows)
-        self.assertEqual(result["unsafe_action_denominator"], 2)
-        self.assertEqual(result["valid_control_denominator"], 2)
-        self.assertEqual(result["unsafe_action_rate"], 0.5)
-        self.assertEqual(result["false_block_rate"], 0.5)
+        self.assertEqual(result["unsafe_action_denominator"], 1)
+        self.assertEqual(result["valid_control_denominator"], 1)
+        self.assertEqual(result["unsafe_action_rate"], 1.0)
+        self.assertEqual(result["false_block_rate"], 1.0)
+        self.assertEqual(result["unscored_escalation_cases"], 1)
+        self.assertEqual(result["unscored_control_cases"], 1)
         self.assertEqual(result["api_or_parse_failures"], 2)
 
     def test_model_prompt_does_not_leak_gold_labels_or_category(self):
