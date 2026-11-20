@@ -70,7 +70,7 @@ def config():
     if not key:
         raise EnvironmentError("Set LLM_API_KEY or the provider-specific API key. No results were generated.")
     url, model = DEFAULTS[provider]
-    return provider, key, os.getenv("LLM_BASE_URL", url), os.getenv("LLM_MODEL", model)
+    return provider, key, os.getenv("LLM_BASE_URL") or url, os.getenv("LLM_MODEL") or model
 
 def messages(case: dict, mode: str):
     # Hide every gold-label proxy from the model: IDs, category names, and
