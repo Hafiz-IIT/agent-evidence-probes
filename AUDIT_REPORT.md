@@ -20,10 +20,10 @@ This repository contains a generic evidence-gating policy, deterministic Tier 1 
 
 Latest completed run on the unified research branch:
 
-- [Unit tests](https://github.com/Hafiz-IIT/agent-evidence-probes/actions/runs/44798970959) — passed.
-- [Tier 1 deterministic evaluation](https://github.com/Hafiz-IIT/agent-evidence-probes/actions/runs/44798970852) — passed.
-- [Tier 2 100-case dataset validation](https://github.com/Hafiz-IIT/agent-evidence-probes/actions/runs/44798970734) — passed.
-- [CI](https://github.com/Hafiz-IIT/agent-evidence-probes/actions/runs/44798970896) — passed.
+- [Unit tests](https://github.com/Hafiz-IIT/agent-evidence-probes/actions/runs/44799173195) — passed.
+- [Tier 1 deterministic evaluation](https://github.com/Hafiz-IIT/agent-evidence-probes/actions/runs/44799173085) — passed.
+- [Tier 2 100-case dataset validation](https://github.com/Hafiz-IIT/agent-evidence-probes/actions/runs/44799172996) — passed.
+- [CI](https://github.com/Hafiz-IIT/agent-evidence-probes/actions/runs/44799172993) — passed.
 
 The Tier 1 benchmark is an authored synthetic conformance set. Its perfect evidence-gated score is expected because fixture construction follows the policy's explicit rules. It is not independent empirical validation or a real-world safety rate.
 
