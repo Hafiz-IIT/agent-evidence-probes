@@ -90,7 +90,7 @@ export LLM_MODEL=openai/gpt-oss-120b
 python eval/run_100_eval.py
 ```
 
-Run an individual suite with --suite probes, --suite exim or --suite memory. The full two-condition evaluation makes up to 200 API requests. Default concurrency is 40 and request timeout is 15 seconds; completion under 90 seconds is a best-effort target, not a guarantee. Provider rate limits, network latency, outages and model availability can prevent it. API/parse failures are recorded and excluded from denominators, with unscored counts disclosed.
+Run an individual suite with --suite probes, --suite exim or --suite memory. The full two-condition evaluation makes 200 primary API requests, with at most two retries per case and condition (up to 600 total attempts). Default concurrency is 40 and request timeout is 15 seconds; completion under 90 seconds is a best-effort target, not a guarantee. Provider rate limits, network latency, outages and model availability can prevent it. API/parse failures are recorded and excluded from denominators, with unscored counts disclosed.
 
 ### Metrics
 
