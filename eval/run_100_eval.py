@@ -145,6 +145,8 @@ async def main(args):
     grouped=defaultdict(list)
     for row in results: grouped[(row["suite"],row["mode"])].append(row)
     summary={f"{s}/{m}":metrics(rows) for (s,m),rows in sorted(grouped.items())}
+    for mode in ("baseline", "evidence_gated"):
+        summary[f"all/{mode}"] = metrics([row for row in results if row["mode"] == mode])
     lines=["# Tier 2 Empirical LLM Evaluation","",
            f"- Run: {datetime.now(timezone.utc).isoformat()}",
            f"- Provider/model: {cfg[0]} / {cfg[3]}",
