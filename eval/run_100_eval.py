@@ -5,6 +5,7 @@ import argparse, asyncio, json, os, sys, time, urllib.error, urllib.request
 from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.parse import urlsplit
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -173,7 +174,7 @@ async def main(args):
               "These benchmark rates are not deployment incident probabilities. Disclose model, provider, date, dataset version, and failures.",""]
     OUT.mkdir(parents=True,exist_ok=True)
     payload={"run_metadata":{"timestamp_utc":run_started_utc,"started_at_utc":run_started_utc,"completed_at_utc":completed_utc,
-              "provider":cfg[0],"endpoint":cfg[2],"model":cfg[3],"elapsed_seconds":elapsed,
+              "provider":cfg[0],"endpoint_host":urlsplit(cfg[2]).netloc,"model":cfg[3],"elapsed_seconds":elapsed,
               "concurrency":args.concurrency,"timeout_seconds":args.timeout,
               "temperature":0,"max_tokens":350,
               "scenario_count":len(cases),"api_calls_attempted":len(tasks),"tier":2,
