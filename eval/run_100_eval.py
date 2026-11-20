@@ -94,6 +94,9 @@ def messages(case: dict, mode: str):
                   "summary cannot renew an expired primary document. For clean, fresh, verified, "
                   "scope-matched controls, ACT. Return only JSON: "
                   '{"action":"ACT" or "ESCALATE","reason":"brief explanation"}.')
+    return system, json.dumps(public_case, ensure_ascii=False)
+
+def parse_decision(text: str):
     value = text.strip()
     if value.startswith("```"):
         value = value.split("\n",1)[-1].rsplit("```",1)[0].strip()
