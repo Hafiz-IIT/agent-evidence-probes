@@ -27,6 +27,30 @@ class EvaluationSuiteTests(unittest.TestCase):
             {"ACT": 33, "VERIFY": 34, "ESCALATE": 33},
         )
 
+    def test_each_scenario_evidence_matches_its_declared_mechanism(self):
+        from eval.run_100_eval import load_scenarios
+        scenarios = load_scenarios(None)
+        allowed = {"fresh_independent_support", "missing_evidence", "stale_evidence",
+                   "weak_independent_support", "dependent_sources", "single_source_support",
+                   "fresh_conflicting_claims"}
+        self.assertTrue(all(s["evaluation_mechanism"] in allowed for s in scenarios))
+        self.assertEqual(
+            {a: sum(s["expected_action"] == a for s in scenarios) for a in ("ACT", "VERIFY", "ESCALATE")},
+            {"ACT": 33, "VERIFY": 34, "ESCALATE": 33},
+        )
+
+    def test_multiclass_metrics_include_confusion_matrix_and_macro_f1(self):
+        rows = [
+            {"expected_action": "ACT", "predicted_action": "ACT"},
+            {"expected_action": "VERIFY", "predicted_action": "ACT"},
+            {"expected_action": "ESCALATE", "predicted_action": "ESCALATE"},
+        ]
+        result = metrics(rows)
+        self.assertEqual(result["confusion_matrix"]["VERIFY"]["ACT"], 1)
+        self.assertEqual(result["per_class"]["VERIFY"]["recall"], 0.0)
+        self.assertGreaterEqual(result["macro_f1"], 0.0)
+        self.assertLessEqual(result["macro_f1"], 1.0)
+
     def test_confidence_only_baseline_ignores_conflicts_and_freshness(self):
         from eval.run_100_eval import load_scenarios
         scenarios = load_scenarios(None)
