@@ -35,6 +35,30 @@ class EvidenceProbeTests(unittest.TestCase):
         result = probe(evidence, "valid", now=self.now)
         self.assertEqual(result.decision, Decision.ESCALATE)
 
+    def test_future_dated_evidence_is_not_fresh(self):
+        evidence = [
+            Evidence("valid", "future-a", 0.99, self.now + 100, independent_group="a"),
+            Evidence("valid", "future-b", 0.99, self.now + 100, independent_group="b"),
+        ]
+        result = probe(evidence, "valid", now=self.now)
+        self.assertEqual(result.fresh_count, 0)
+        self.assertEqual(result.decision, Decision.VERIFY)
+
+    def test_invalid_evidence_values_rejected(self):
+        for args in [
+            ("valid", "a", float("nan"), self.now),
+            ("valid", "a", 1.1, self.now),
+            ("valid", "a", 0.9, self.now, -1),
+        ]:
+            with self.subTest(args=args), self.assertRaises(ValueError):
+                Evidence(*args)
+
+    def test_invalid_probe_thresholds_rejected(self):
+        with self.assertRaises(ValueError):
+            probe([], "valid", act_threshold=float("nan"), now=self.now)
+        with self.assertRaises(ValueError):
+            probe([], "valid", min_independent_sources=True, now=self.now)
+
     def test_expired_evidence_is_ignored(self):
         evidence = [
             Evidence("valid", "old", 0.99, self.now - 100, ttl_seconds=10),
