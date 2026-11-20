@@ -41,12 +41,14 @@ class Tier2DatasetTests(unittest.TestCase):
     def test_model_prompt_does_not_leak_gold_labels_or_category(self):
         payload = json.loads((ROOT / "data" / "probes_60.json").read_text(encoding="utf-8"))
         case = payload["scenarios"][0]
+        case["_suite"] = "probes"
         _, prompt = EVAL.messages(case, "baseline")
         self.assertNotIn(case["scenario_id"], prompt)
         self.assertNotIn(case["category"], prompt)
         self.assertNotIn("expected_action", prompt)
         self.assertNotIn("expected_rationale", prompt)
         self.assertNotIn("risk_flags", prompt)
+        self.assertNotIn("_suite", prompt)
 
     def test_runner_cli_help_executes_without_api_credentials(self):
         result = subprocess.run(
