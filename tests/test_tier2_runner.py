@@ -1,6 +1,6 @@
 import unittest
 
-from eval.run_100_eval import build_payload, config, load_cases, messages
+from eval.run_100_eval import build_payload, config, load_cases, messages, run_one
 from unittest.mock import patch
 
 
@@ -61,7 +61,7 @@ class Tier2DatasetTests(unittest.TestCase):
         groq = build_payload("groq", "openai/gpt-oss-120b", prompt)
         self.assertEqual([m["role"] for m in groq["messages"]], ["user"])
         self.assertIn("Follow evidence policy.", groq["messages"][0]["content"])
-        self.assertIn("\\n\\n", groq["messages"][0]["content"])
+        self.assertIn("\n\n", groq["messages"][0]["content"])
         self.assertNotIn("\\\\n", groq["messages"][0]["content"])
         self.assertEqual(groq["max_completion_tokens"], 350)
         self.assertNotIn("max_tokens", groq)
@@ -78,6 +78,22 @@ class Tier2DatasetTests(unittest.TestCase):
         gated = messages(row, "evidence_gated")[1]
         self.assertEqual(baseline, gated)
 
+
+
+class Tier2RetryTests(unittest.IsolatedAsyncioTestCase):
+    async def test_transient_rate_limit_is_retried_and_attempts_are_logged(self):
+        from unittest.mock import AsyncMock, patch
+        import asyncio
+        case = {
+            "_suite": "probes", "scenario_id": "RETRY-001",
+            "expected_action": "ACT", "context": "A clean control.", "evidence": []
+        }
+        first = {"ok": False, "http_status": 429, "error": "rate limited"}
+        second = {"ok": True, "http_status": 200, "parsed": {"action": "ACT"}}
+        with patch("eval.run_100_eval.asyncio.to_thread", new=AsyncMock(side_effect=[first, second])):
+            result = await run_one(asyncio.Semaphore(1), ("openai", "key", "url", "model"), case, "baseline", 5)
+        self.assertTrue(result["ok"])
+        self.assertEqual(result["attempts"], 2)
 
 if __name__ == "__main__":
     unittest.main()
