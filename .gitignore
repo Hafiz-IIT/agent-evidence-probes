@@ -1,0 +1,10 @@
+# Runtime evaluation traces may contain provider metadata and should be reviewed before publication.
+results/
+.env
+.env.*
+!.env.example
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
