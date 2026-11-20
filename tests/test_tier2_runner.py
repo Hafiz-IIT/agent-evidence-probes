@@ -20,6 +20,19 @@ class Tier2DatasetTests(unittest.TestCase):
         self.assertEqual(sum(row["expected_action"] == "ACT" for row in rows), 15)
         self.assertEqual(sum(row["expected_action"] == "ESCALATE" for row in rows), 45)
 
+    def test_internal_suite_metadata_is_not_exposed(self):
+        row = dict(load_cases("probes")[0])
+        row["_suite"] = "probes"
+        for mode in ("baseline", "evidence_gated"):
+            system, user = messages(row, mode)
+            self.assertNotIn("_suite", user)
+            self.assertNotIn('"probes"', user)
+
+    def test_evidence_gate_uses_verified_scope_not_a_universal_signature_requirement(self):
+        system, _ = messages(load_cases("probes")[0], "evidence_gated")
+        self.assertIn("verified", system)
+        self.assertNotIn("valid, signed", system)
+
     def test_model_prompt_does_not_expose_gold_label_or_category(self):
         row = load_cases("probes")[0]
         for mode in ("baseline", "evidence_gated"):
@@ -48,6 +61,8 @@ class Tier2DatasetTests(unittest.TestCase):
         groq = build_payload("groq", "openai/gpt-oss-120b", prompt)
         self.assertEqual([m["role"] for m in groq["messages"]], ["user"])
         self.assertIn("Follow evidence policy.", groq["messages"][0]["content"])
+        self.assertIn("\\n\\n", groq["messages"][0]["content"])
+        self.assertNotIn("\\\\n", groq["messages"][0]["content"])
         self.assertEqual(groq["max_completion_tokens"], 350)
         self.assertNotIn("max_tokens", groq)
         openai = build_payload("openai", "gpt-4.1-mini", prompt)
