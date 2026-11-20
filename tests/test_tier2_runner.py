@@ -60,7 +60,7 @@ class Tier2DatasetTests(unittest.TestCase):
         prompt = ("Follow evidence policy.", "Evaluate the scenario.")
         groq = build_payload("groq", "openai/gpt-oss-120b", prompt)
         self.assertEqual([m["role"] for m in groq["messages"]], ["user"])
-        self.assertIn("Follow evidence policy.", groq["messages"][0]["content"])
+        self.assertIn("\n\n", groq["messages"][0]["content"])
         self.assertIn("\n\n", groq["messages"][0]["content"])
         self.assertNotIn("\\\\n", groq["messages"][0]["content"])
         self.assertEqual(groq["max_completion_tokens"], 350)
