@@ -1,4 +1,5 @@
 import unittest
+import json
 
 from eval.run_100_eval import build_payload, config, load_cases, messages, parse_response, run_one
 from unittest.mock import patch
@@ -19,6 +20,28 @@ class Tier2DatasetTests(unittest.TestCase):
         })
         self.assertEqual(sum(row["expected_action"] == "ACT" for row in rows), 15)
         self.assertEqual(sum(row["expected_action"] == "ESCALATE" for row in rows), 45)
+
+    def test_all_available_suites_hide_gold_metadata_and_match_condition_inputs(self):
+        hidden = {
+            "scenario_id", "category", "risk_flags", "_suite",
+            "expected_action", "expected_rationale", "gold_label", "scoring_notes",
+        }
+        checked = []
+        for suite in ("probes", "exim", "memory"):
+            try:
+                rows = load_cases(suite)
+            except FileNotFoundError:
+                continue
+            checked.append(suite)
+            for row in rows:
+                baseline_user = messages(row, "baseline")[1]
+                gated_user = messages(row, "evidence_gated")[1]
+                self.assertEqual(baseline_user, gated_user, msg=f"{suite}/{row['scenario_id']}")
+                public_case = json.loads(baseline_user)
+                for key in hidden:
+                    self.assertNotIn(key, public_case, msg=f"{suite}/{row['scenario_id']} leaked {key}")
+                self.assertNotIn(row["scenario_id"], baseline_user, msg=f"{suite}/{row['scenario_id']} ID leaked")
+        self.assertIn("probes", checked)
 
     def test_internal_suite_metadata_is_not_exposed(self):
         row = dict(load_cases("probes")[0])
