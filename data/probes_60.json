@@ -2,8 +2,8 @@
   "dataset_name": "Agent Evidence Probes — Tier 2 empirical suite",
   "version": "1.0.0",
   "tier": 2,
-  "synthetic": false,
-  "fixture_notice": "Constructed benchmark fixtures; not real shipment records or observed incidents.",
+  "synthetic": true,
+  "fixture_notice": "Constructed fictional scenarios for empirical model evaluation; not real user records, shipment records, customs records, or observed incidents.",
   "scenario_count": 60,
   "category_counts": {
     "conflicting_evidence": 15,
@@ -2356,5 +2356,6 @@
       "decision_question": "May the agent proceed with the requested routine approval?",
       "expected_rationale": "Evidence is consistent, current, signed, and independently sourced."
     }
-  ]
+  ],
+  "scenario_origin": "constructed_fictional_benchmark_fixtures"
 }
