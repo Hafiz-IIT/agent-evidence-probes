@@ -49,6 +49,8 @@ class EvidenceProbeTests(unittest.TestCase):
             Evidence("valid", "source", 1.2, self.now)
         with self.assertRaises(ValueError):
             Evidence("valid", "source", 0.9, self.now, ttl_seconds=-1)
+        with self.assertRaises(ValueError):
+            Evidence("valid", "source", 0.9, self.now, independent_group=42)
 
     def test_invalid_policy_thresholds_are_rejected(self):
         evidence = [Evidence("valid", "a", 0.99, self.now)]
