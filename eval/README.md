@@ -111,3 +111,7 @@ The runner writes:
 The JSON records provider, model, endpoint host, concurrency, timeout, run timestamps and a SHA-256 digest of the scenario data. Logs may contain scenario text and provider response metadata; review them before publishing. Runtime results are not committed automatically.
 
 **No Tier 2 model results are claimed until the script is executed with real provider credentials.** Never substitute deterministic Tier 1 outputs or invented values for API measurements.
+
+### Optional GitHub Actions execution
+
+A manually triggered workflow is also available at **Actions → Tier 2 real-LLM evaluation**. Select the provider and suite, configure the corresponding repository secret (OPENAI_API_KEY, ANTHROPIC_API_KEY or GROQ_API_KEY), and explicitly confirm paid API usage. The workflow validates all selected datasets before making model calls and uploads raw traces and the Markdown summary as an artifact. It does not run automatically on pushes or pull requests.
