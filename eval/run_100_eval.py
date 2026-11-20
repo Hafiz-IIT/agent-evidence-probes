@@ -214,6 +214,11 @@ def metrics(rows):
         "balanced_accuracy": sum(recall.values())/2,
     }
 
+def attempted_request_count(rows):
+    """Count actual HTTP attempts, including retries, from completed result rows."""
+    return sum(int(row.get("attempts", 1)) for row in rows)
+
+
 def percent(x): return "N/A" if x is None else f"{100*x:.1f}%"
 
 async def main(args):
@@ -242,7 +247,7 @@ async def main(args):
     lines=["# Tier 2 Empirical LLM Evaluation","",
            f"- Run: {datetime.now(timezone.utc).isoformat()}",
            f"- Provider/model: {cfg[0]} / {cfg[3]}",
-           f"- Scenarios: {len(cases)}; API calls attempted: {len(tasks)}; wall time: {elapsed}s",
+           f"- Scenarios: {len(cases)}; primary requests: {len(tasks)}; HTTP attempts including retries: {attempted_request_count(results)}; wall time: {elapsed}s",
            "- Tier 1 deterministic synthetic tests are reported separately.",
            "- Evidence-gated condition is a prompt-level instruction, not an external deterministic controller.",
            "- Scenario IDs, category labels, risk flags, and gold labels are hidden from model prompts.",
@@ -262,7 +267,7 @@ async def main(args):
               "provider":cfg[0],"endpoint_host":urlsplit(cfg[2]).netloc,"model":cfg[3],"elapsed_seconds":elapsed,
               "concurrency":args.concurrency,"timeout_seconds":args.timeout,
               "temperature":0,"max_tokens":350,
-              "scenario_count":len(cases),"api_calls_attempted":len(tasks),"tier":2,
+              "scenario_count":len(cases),"primary_requests_count":len(tasks),"api_calls_attempted":attempted_request_count(results),"tier":2,
               "evidence_gated_mode":"prompt-level system instruction; no external deterministic controller"},
              "summary":summary,"results":results}
     (OUT/"eval_100_results.json").write_text(json.dumps(payload,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
