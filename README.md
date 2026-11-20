@@ -59,6 +59,10 @@ The repository also contains `benchmark.py`, a deterministic reference benchmark
 
 This is a **research prototype**, not a claim about production agent safety or empirical validation on deployed agents.
 
+## Trust boundary
+
+The `independent_group` value is supplied by the caller and is used only to avoid double-counting records assigned to the same lineage. It is not cryptographic proof of source independence. A production integration must authenticate source identity and derive lineage from verified acquisition and administrative provenance.
+
 ## Why it matters
 
 This project is one component of a broader research direction: **making autonomous systems evidence-aware before they receive authority to act**.
