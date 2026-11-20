@@ -2,14 +2,14 @@ import json
 import unittest
 from pathlib import Path
 
-from eval.run_100_eval import decide, llm_scenario_view, metrics
+from eval.run_tier1_conformance import decide, llm_scenario_view, metrics
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 class EvaluationSuiteTests(unittest.TestCase):
     def test_probe_dataset_has_balanced_sixty_scenarios(self):
-        payload = json.loads((ROOT / "data" / "probes_60.json").read_text(encoding="utf-8"))
+        payload = json.loads((ROOT / "data" / "probes_tier1_60.json").read_text(encoding="utf-8"))
         scenarios = payload["scenarios"]
         self.assertEqual(payload["count"], 60)
         self.assertEqual(len(scenarios), 60)
@@ -18,7 +18,7 @@ class EvaluationSuiteTests(unittest.TestCase):
                          {"ACT": 20, "VERIFY": 20, "ESCALATE": 20})
 
     def test_all_three_datasets_form_exactly_one_hundred_cases(self):
-        from eval.run_100_eval import load_scenarios
+        from eval.run_tier1_conformance import load_scenarios
         scenarios = load_scenarios(None)
         self.assertEqual(len(scenarios), 100)
         self.assertEqual(len({s["id"] for s in scenarios}), 100)
@@ -28,7 +28,7 @@ class EvaluationSuiteTests(unittest.TestCase):
         )
 
     def test_each_scenario_evidence_matches_its_declared_mechanism(self):
-        from eval.run_100_eval import load_scenarios
+        from eval.run_tier1_conformance import load_scenarios
         scenarios = load_scenarios(None)
         allowed = {"fresh_independent_support", "missing_evidence", "stale_evidence",
                    "weak_independent_support", "dependent_sources", "single_source_support",
@@ -66,7 +66,7 @@ class EvaluationSuiteTests(unittest.TestCase):
         self.assertLessEqual(result["macro_f1"], 1.0)
 
     def test_confidence_only_baseline_ignores_conflicts_and_freshness(self):
-        from eval.run_100_eval import load_scenarios
+        from eval.run_tier1_conformance import load_scenarios
         scenarios = load_scenarios(None)
         rows = [{"expected_action": s["expected_action"], "predicted_action": decide(s, False)} for s in scenarios]
         result = metrics(rows)
@@ -74,7 +74,7 @@ class EvaluationSuiteTests(unittest.TestCase):
         self.assertEqual(result["false_block_rate"], 0.0)
 
     def test_combined_deterministic_gate_matches_authored_labels(self):
-        from eval.run_100_eval import load_scenarios
+        from eval.run_tier1_conformance import load_scenarios
         scenarios = load_scenarios(None)
         rows = [{"expected_action": s["expected_action"], "predicted_action": decide(s, True)} for s in scenarios]
         result = metrics(rows)
@@ -84,7 +84,7 @@ class EvaluationSuiteTests(unittest.TestCase):
         self.assertEqual(result["exact_action_accuracy"], 1.0)
 
     def test_deterministic_modes_and_metric_denominators(self):
-        payload = json.loads((ROOT / "data" / "probes_60.json").read_text(encoding="utf-8"))
+        payload = json.loads((ROOT / "data" / "probes_tier1_60.json").read_text(encoding="utf-8"))
         rows = payload["scenarios"]
         predictions = [{"expected_action": s["expected_action"], "predicted_action": decide(s, True)} for s in rows]
         result = metrics(predictions)
