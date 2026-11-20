@@ -135,7 +135,10 @@ async def main(a):
     if a.subset:
         wanted={x.strip() for x in a.subset.split(",") if x.strip()}
         scenarios=[s for s in scenarios if s["id"] in wanted or s["category"] in wanted]
-    if a.limit is not None:\n        if a.limit < 1: raise SystemExit("--limit must be >= 1")\n        scenarios=scenarios[:a.limit]
+    if a.limit is not None:
+        if a.limit < 1:
+            raise SystemExit("--limit must be >= 1")
+        scenarios=scenarios[:a.limit]
     if not scenarios: raise SystemExit("No scenarios selected.")
     results={}
     if a.mode in {"baseline","both"}: results["baseline"]=[{"scenario_id":s["id"],"name":s["name"],"expected_action":s["expected_action"],"predicted_action":decide(s,False),"mode":"baseline","tier":s["tier"]} for s in scenarios]
