@@ -33,8 +33,8 @@ def synthetic_scenarios(*, now: float = 1000.0) -> tuple[Scenario, ...]:
             "conflicting_sources",
             "valid",
             (
-                Evidence("valid", "registry-A", 0.95, now, independent_group="source-A"),
-                Evidence("invalid", "registry-B", 0.95, now, independent_group="source-B"),
+                Evidence("valid", "registry-A", 0.95, now, independent_group="source-A", claim_key="shipment_status"),
+                Evidence("invalid", "registry-B", 0.95, now, independent_group="source-B", claim_key="shipment_status"),
             ),
             Decision.ESCALATE,
         ),
