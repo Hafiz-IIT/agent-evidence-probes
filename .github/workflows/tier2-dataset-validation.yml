@@ -35,5 +35,8 @@ jobs:
           EXIM_DATASET_PATH: ${{ github.workspace }}/external/exim/data/exim_real_25.json
           MEMORY_DATASET_PATH: ${{ github.workspace }}/external/memory/data/memory_15.json
         run: python eval/run_100_eval.py --validate-only
-      - name: Run Tier 2 runner tests
+      - name: Run Tier 2 runner tests across all three suites
+        env:
+          EXIM_DATASET_PATH: ${{ github.workspace }}/external/exim/data/exim_real_25.json
+          MEMORY_DATASET_PATH: ${{ github.workspace }}/external/memory/data/memory_15.json
         run: python -m unittest tests/test_tier2_runner.py
