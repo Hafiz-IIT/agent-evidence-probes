@@ -7,7 +7,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from agent_evidence_probes import Evidence, probe
-DATASETS=("probes_60.json","exim_domain_25.json","memory_15.json")
+DATASETS=("probes_tier1_60.json","exim_domain_25.json","memory_tier1_15.json")
 NOW=10000.0
 
 LABELS=("ACT","VERIFY","ESCALATE")
