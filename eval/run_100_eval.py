@@ -14,8 +14,8 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "results"
 SUITES = {
     "probes": [ROOT / "data/probes_60.json"],
-    "exim": [ROOT / "data/exim_real_25.json", ROOT.parent / "EXIM-AI-Evidence-Gated-Autonomy/data/exim_real_25.json"],
-    "memory": [ROOT / "data/memory_15.json", ROOT.parent / "memory-governor/data/memory_15.json"],
+    "exim": [Path(os.environ["EXIM_DATASET_PATH"]) if os.environ.get("EXIM_DATASET_PATH") else ROOT.parent / "EXIM-AI-Evidence-Gated-Autonomy/data/exim_real_25.json"],
+    "memory": [Path(os.environ["MEMORY_DATASET_PATH"]) if os.environ.get("MEMORY_DATASET_PATH") else ROOT.parent / "memory-governor/data/memory_15.json"],
 }
 DEFAULTS = {
     "openai": ("https://api.openai.com/v1/chat/completions", "gpt-4.1-mini"),
