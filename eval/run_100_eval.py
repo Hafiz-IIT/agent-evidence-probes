@@ -110,8 +110,12 @@ def build_payload(provider: str, model: str, prompt):
     system, user = prompt
     if provider == "anthropic":
         return {"model": model, "max_tokens": 350, "temperature": 0, "system": system, "messages": [{"role": "user", "content": user}]}
-    if provider in ("openai", "groq"):
-        return {"model": model, "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}], "temperature": 0, "max_tokens": 350, "response_format": {"type": "json_object"}}
+    if provider == "groq":
+        # Groq GPT-OSS reasoning guidance recommends placing instructions
+        # in the user message rather than relying on a system-role message.
+        return {"model": model, "messages": [{"role": "user", "content": system + "\\n\\n" + user}], "temperature": 0, "max_completion_tokens": 350, "response_format": {"type": "json_object"}}
+    if provider == "openai":
+        return {"model": model, "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}], "temperature": 0, "max_completion_tokens": 350, "response_format": {"type": "json_object"}}
     raise ValueError("unsupported provider: " + str(provider))
 
 def request_sync(provider, key, url, model, prompt, timeout):
