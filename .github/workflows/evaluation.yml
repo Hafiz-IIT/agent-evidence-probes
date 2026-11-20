@@ -21,7 +21,7 @@ jobs:
         with:
           python-version: "3.11"
       - name: Run baseline and evidence-gated modes
-        run: python eval/run_100_eval.py --mode both --output results
+        run: python eval/run_tier1_conformance.py --mode both --output results
       - name: Upload reproducible run outputs
         uses: actions/upload-artifact@v4
         with:
