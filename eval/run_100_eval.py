@@ -21,7 +21,11 @@ def load_scenarios(paths):
     return rows
 
 def decide(s, gated):
-    if not gated: return "ACT"
+    if not gated:
+        # Confidence-only comparator: deliberately ignores freshness, provenance,
+        # source independence and conflicts.
+        peak=max((float(x["confidence"]) for x in s["evidence"]), default=0.0)
+        return "ACT" if peak >= 0.90 else "VERIFY"
     evidence=[Evidence(x["claim"],x["source"],float(x["confidence"]),NOW-float(x["age_seconds"]),float(x["ttl_seconds"]),x.get("independent_group")) for x in s["evidence"]]
     return probe(evidence,s["target_claim"],now=NOW).decision.value
 
@@ -57,7 +61,7 @@ async def llm_rows(scenarios,gated,concurrency):
 
 def write_results(results,scenarios,out):
     out.mkdir(parents=True,exist_ok=True); stamp=datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    summary={"created_at_utc":datetime.now(timezone.utc).isoformat(),"scenario_count":len(scenarios),"scenario_ids":[s["id"] for s in scenarios],"modes":{k:metrics(v) for k,v in results.items()},"note":"Metrics are calculated only from this executed run. LLM results are model/API-specific."}
+    summary={"created_at_utc":datetime.now(timezone.utc).isoformat(),"scenario_count":len(scenarios),"scenario_ids":[s["id"] for s in scenarios],"modes":{k:metrics(v) for k,v in results.items()},"baseline_definition":"confidence_only: ACT when any evidence item has confidence >= 0.90; otherwise VERIFY. It ignores freshness, provenance, independence and conflicts.","evidence_gated_definition":"Existing probe() policy: freshness, independent support, conflict detection and action threshold.","note":"Metrics are calculated only from this executed run. Authored Tier 1 scenarios are a deterministic conformance set, not deployed-agent or human-subject evidence. LLM results are model/API-specific."}
     (out/f"summary_{stamp}.json").write_text(json.dumps(summary,indent=2)+"\n",encoding="utf-8")
     for mode,rows in results.items():
         with (out/f"{mode}_{stamp}.csv").open("w",newline="",encoding="utf-8") as f:
