@@ -13,6 +13,14 @@ on:
           - memory
         default: all
         required: true
+      run_mode:
+        description: Run one-request connectivity smoke test first, or the full benchmark
+        type: choice
+        options:
+          - smoke
+          - full
+        default: smoke
+        required: true
       model:
         description: Optional exact Groq model ID; leave blank to use the runner default
         type: string
@@ -65,7 +73,16 @@ jobs:
           fi
       - name: Validate datasets before provider usage
         run: python eval/run_100_eval.py --validate-only
+      - name: Run one-request provider smoke test
+        if: ${{ inputs.run_mode == 'smoke' }}
+        run: |
+          if [ "$EVAL_SUITE" = "all" ]; then
+            python eval/run_100_eval.py --smoke-test
+          else
+            python eval/run_100_eval.py --suite "$EVAL_SUITE" --smoke-test
+          fi
       - name: Run selected real-LLM evaluation
+        if: ${{ inputs.run_mode == 'full' }}
         run: |
           if [ "$EVAL_SUITE" = "all" ]; then
             python eval/run_100_eval.py
