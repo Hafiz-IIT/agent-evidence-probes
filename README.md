@@ -49,7 +49,7 @@ The repository also contains `benchmark.py`, a deterministic reference benchmark
 - evidence objects with source/provenance metadata
 - freshness filtering
 - source-independence grouping
-- conflict detection
+- claim-scoped conflict detection (different propositions are not treated as contradictions)
 - support aggregation
 - explicit ACT / VERIFY / ESCALATE outcomes
 - reproducible benchmark cases
@@ -58,6 +58,10 @@ The repository also contains `benchmark.py`, a deterministic reference benchmark
 ## Research boundary
 
 This is a **research prototype**, not a claim about production agent safety or empirical validation on deployed agents.
+
+## Trust boundary
+
+The `independent_group` value is supplied by the caller and is used only to avoid double-counting records assigned to the same lineage. It is not cryptographic proof of source independence. A production integration must authenticate source identity and derive lineage from verified acquisition and administrative provenance. Conflict detection compares normalized claim text only when records share an explicit `claim_key`; unkeyed records are not assumed to describe the same proposition. This is lexical grouping, not semantic contradiction detection. The `claim_key` and `independent_group` values are caller-supplied metadata and are not authenticated.
 
 ## Why it matters
 

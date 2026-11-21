@@ -1,0 +1,48 @@
+name: 100-scenario deterministic evaluation
+
+on:
+  pull_request:
+    paths:
+      - "data/**"
+      - "eval/**"
+      - "agent_evidence_probes.py"
+      - ".github/workflows/evaluation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deterministic-evaluation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Check out EXIM Tier 2 dataset
+        uses: actions/checkout@v4
+        with:
+          repository: Hafiz-IIT/EXIM-AI-Evidence-Gated-Autonomy
+          ref: research/100-scenario-eval-suite
+          path: EXIM-AI-Evidence-Gated-Autonomy
+      - name: Check out memory Tier 2 dataset
+        uses: actions/checkout@v4
+        with:
+          repository: Hafiz-IIT/memory-governor
+          ref: research/100-scenario-eval-suite
+          path: memory-governor
+      - name: Validate all 100 Tier 2 scenarios without API calls
+        env:
+          EXIM_DATASET_PATH: ${{ github.workspace }}/EXIM-AI-Evidence-Gated-Autonomy/data/exim_real_25.json
+          MEMORY_DATASET_PATH: ${{ github.workspace }}/memory-governor/data/memory_15.json
+        run: python eval/run_100_eval.py --validate-only
+      - name: Run baseline and evidence-gated modes
+        run: python eval/run_tier1_conformance.py --mode both --output results
+      - name: Upload reproducible run outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: evidence-gating-evaluation-results
+          path: results/
+          if-no-files-found: error
+          retention-days: 30

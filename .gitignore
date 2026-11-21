@@ -1,0 +1,14 @@
+# Local Python artifacts
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+
+# Evaluation outputs may contain raw provider responses
+results/

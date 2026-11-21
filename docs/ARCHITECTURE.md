@@ -16,3 +16,7 @@ The current prototype intentionally keeps interfaces small and inspectable. Futu
 
 ## Failure handling
 Every consequential output should expose enough state to explain why the system acted, deferred, verified, substituted, or escalated.
+
+## Trust boundary
+
+`independent_group` is a caller-supplied grouping hint, not cryptographic proof of independent origin, acquisition, or administration. Production adapters must authenticate source identity and derive dependency groups from verified provenance. This prototype validates the supplied values but does not establish those trust properties.
