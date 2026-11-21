@@ -125,9 +125,9 @@ def request_sync(provider, key, url, model, prompt, timeout):
     system, user = prompt
     body = build_payload(provider, model, prompt)
     if provider == "anthropic":
-        headers = {"x-api-key":key,"anthropic-version":"2023-06-01","content-type":"application/json"}
+        headers = {"x-api-key":key,"anthropic-version":"2023-06-01","content-type":"application/json","user-agent":"agent-evidence-probes-tier2/1.0 (+https://github.com/Hafiz-IIT/agent-evidence-probes)"}
     else:
-        headers = {"authorization":f"Bearer {key}","content-type":"application/json"}
+        headers = {"authorization":f"Bearer {key}","content-type":"application/json","user-agent":"agent-evidence-probes-tier2/1.0 (+https://github.com/Hafiz-IIT/agent-evidence-probes)"}
     req = urllib.request.Request(url,data=json.dumps(body).encode(),headers=headers,method="POST")
     started_at_utc = datetime.now(timezone.utc).isoformat()
     start = time.monotonic()
@@ -232,6 +232,26 @@ async def main(args):
         print(json.dumps({"validation":"PASS","suite_counts":{s:sum(x["_suite"]==s for x in cases) for s in args.suite},"total_scenarios":len(cases)},indent=2))
         return 0
     cfg = config()
+    if args.smoke_test:
+        # One request only: verify provider reachability and a parseable decision
+        # before allowing the 200-request benchmark to run.
+        case = cases[0]
+        prompt = messages(case, "baseline")
+        result = await asyncio.to_thread(request_sync, cfg[0], cfg[1], cfg[2], cfg[3], prompt, args.timeout)
+        status = result.get("http_status", "no HTTP response")
+        parsed = result.get("parsed", {})
+        success = bool(result.get("ok")) and parsed.get("action") in ("ACT", "ESCALATE")
+        print(json.dumps({
+            "smoke_test": "PASS" if success else "FAIL",
+            "provider": cfg[0],
+            "model": cfg[3],
+            "http_status": status,
+            "valid_decision": success,
+            "decision": parsed.get("action"),
+            "error": None if success else result.get("error", "Provider returned an invalid decision"),
+            "requests_sent": 1
+        }, indent=2))
+        return 0 if success else 2
     sem=asyncio.Semaphore(args.concurrency)
     tasks=[run_one(sem,cfg,c,mode,args.timeout) for c in cases for mode in ("baseline","evidence_gated")]
     run_started_utc = datetime.now(timezone.utc).isoformat()
@@ -280,6 +300,7 @@ def cli():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument("--suite",nargs="+",choices=("probes","exim","memory"),default=["probes","exim","memory"])
     p.add_argument("--validate-only",action="store_true",help="Validate selected Tier 2 datasets without calling an LLM API")
+    p.add_argument("--smoke-test",action="store_true",help="Send exactly one provider request and require a valid decision before the full benchmark")
     p.add_argument("--concurrency",type=int,default=40)
     p.add_argument("--timeout",type=float,default=15.0,help="Per-request timeout. Defaults are sized for a best-effort sub-90-second run; provider rate limits and latency can still prevent completion.")
     a=p.parse_args()
