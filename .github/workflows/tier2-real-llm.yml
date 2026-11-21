@@ -42,7 +42,7 @@ jobs:
   evaluate:
     if: ${{ inputs.confirm_zero_spend == true }}
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 60
     env:
       LLM_PROVIDER: groq
       LLM_MODEL: ${{ inputs.model }}
