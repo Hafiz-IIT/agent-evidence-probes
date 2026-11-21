@@ -1,0 +1,82 @@
+name: Tier 2 real-LLM evaluation (zero-spend gate)
+
+on:
+  workflow_dispatch:
+    inputs:
+      suite:
+        description: Dataset subset
+        type: choice
+        options:
+          - all
+          - probes
+          - exim
+          - memory
+        default: all
+        required: true
+      model:
+        description: Optional exact Groq model ID; leave blank to use the runner default
+        type: string
+        required: false
+      confirm_zero_spend:
+        description: Confirm Groq account is on a free tier with no paid overage or paid fallback, and stop if free quota is unavailable
+        type: boolean
+        required: true
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tier2-real-llm-zero-spend-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  evaluate:
+    if: ${{ inputs.confirm_zero_spend == true }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      LLM_PROVIDER: groq
+      LLM_MODEL: ${{ inputs.model }}
+      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+      EXIM_DATASET_PATH: ${{ github.workspace }}/external/exim/data/exim_real_25.json
+      MEMORY_DATASET_PATH: ${{ github.workspace }}/external/memory/data/memory_15.json
+      EVAL_SUITE: ${{ inputs.suite }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: Hafiz-IIT/EXIM-AI-Evidence-Gated-Autonomy
+          ref: research/100-scenario-eval-suite
+          path: external/exim
+      - uses: actions/checkout@v4
+        with:
+          repository: Hafiz-IIT/memory-governor
+          ref: research/100-scenario-eval-suite
+          path: external/memory
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Fail closed if credential is missing
+        run: |
+          if [ -z "$GROQ_API_KEY" ]; then
+            echo "::error::Add GROQ_API_KEY as a repository Actions secret before running Tier 2."
+            exit 1
+          fi
+      - name: Validate datasets before provider usage
+        run: python eval/run_100_eval.py --validate-only
+      - name: Run selected real-LLM evaluation
+        run: |
+          if [ "$EVAL_SUITE" = "all" ]; then
+            python eval/run_100_eval.py
+          else
+            python eval/run_100_eval.py --suite "$EVAL_SUITE"
+          fi
+      - name: Upload raw traces and summary
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tier2-real-llm-results
+          path: results/
+          if-no-files-found: warn
+          retention-days: 30
