@@ -154,7 +154,7 @@ def request_sync(provider, key, url, model, prompt, timeout):
                 "completed_at_utc":datetime.now(timezone.utc).isoformat(),
                 "latency_seconds":round(time.monotonic()-start,3),"error":f"{type(exc).__name__}: {exc}"}
 
-async def run_one(sem, cfg, case, mode, timeout):
+async def run_one(sem, cfg, case, mode, timeout, request_interval):
     provider,key,url,model = cfg
     prompt = messages(case, mode)
     attempts = 0
@@ -162,6 +162,9 @@ async def run_one(sem, cfg, case, mode, timeout):
         attempts += 1
         async with sem:
             result = await asyncio.to_thread(request_sync,provider,key,url,model,prompt,timeout)
+            # Serialize and pace requests to stay below small free-tier TPM limits.
+            if request_interval:
+                await asyncio.sleep(request_interval)
         status = result.get("http_status")
         error = str(result.get("error", ""))
         retryable = status in (429, 500, 502, 503, 504) or (
@@ -169,7 +172,9 @@ async def run_one(sem, cfg, case, mode, timeout):
         )
         if result.get("ok") or not retryable or attempts >= 3:
             break
-        await asyncio.sleep(0.5 * (2 ** (attempts - 1)))
+        # 429 bodies commonly include a provider-suggested wait; use a conservative
+        # cooldown rather than retrying into the same minute-level quota window.
+        await asyncio.sleep(max(8.0, 5.0 * (2 ** (attempts - 1))))
     result["attempts"] = attempts
     return {"suite":case["_suite"],"scenario_id":case["scenario_id"],"mode":mode,
             "expected_action":case["expected_action"],
@@ -253,7 +258,7 @@ async def main(args):
         }, indent=2))
         return 0 if success else 2
     sem=asyncio.Semaphore(args.concurrency)
-    tasks=[run_one(sem,cfg,c,mode,args.timeout) for c in cases for mode in ("baseline","evidence_gated")]
+    tasks=[run_one(sem,cfg,c,mode,args.timeout,args.request_interval) for c in cases for mode in ("baseline","evidence_gated")]
     run_started_utc = datetime.now(timezone.utc).isoformat()
     started=time.monotonic()
     results=await asyncio.gather(*tasks)
@@ -285,7 +290,7 @@ async def main(args):
     dataset_digest=hashlib.sha256(json.dumps(cases,sort_keys=True,separators=(",",":"),ensure_ascii=False).encode("utf-8")).hexdigest()
     payload={"run_metadata":{"dataset_sha256":dataset_digest,"timestamp_utc":run_started_utc,"started_at_utc":run_started_utc,"completed_at_utc":completed_utc,
               "provider":cfg[0],"endpoint_host":urlsplit(cfg[2]).netloc,"model":cfg[3],"elapsed_seconds":elapsed,
-              "concurrency":args.concurrency,"timeout_seconds":args.timeout,
+              "concurrency":args.concurrency,"request_interval_seconds":args.request_interval,"timeout_seconds":args.timeout,
               "temperature":0,"max_tokens":350,
               "scenario_count":len(cases),"primary_requests_count":len(tasks),"api_calls_attempted":attempted_request_count(results),"tier":2,
               "evidence_gated_mode":"prompt-level system instruction; no external deterministic controller"},
@@ -301,11 +306,12 @@ def cli():
     p.add_argument("--suite",nargs="+",choices=("probes","exim","memory"),default=["probes","exim","memory"])
     p.add_argument("--validate-only",action="store_true",help="Validate selected Tier 2 datasets without calling an LLM API")
     p.add_argument("--smoke-test",action="store_true",help="Send exactly one provider request and require a valid decision before the full benchmark")
-    p.add_argument("--concurrency",type=int,default=40)
-    p.add_argument("--timeout",type=float,default=15.0,help="Per-request timeout. Defaults are sized for a best-effort sub-90-second run; provider rate limits and latency can still prevent completion.")
+    p.add_argument("--concurrency",type=int,default=1)
+    p.add_argument("--request-interval",type=float,default=7.5,help="Minimum pause after each provider request; default 7.5s is conservative for Groq's observed 8,000 TPM limit.")
+    p.add_argument("--timeout",type=float,default=15.0,help="Per-request timeout.")
     a=p.parse_args()
-    if not 1<=a.concurrency<=100 or not isfinite(a.timeout) or not 0<a.timeout<=60:
-        p.error("concurrency must be 1-100 and timeout must be finite and in (0, 60]")
+    if not 1<=a.concurrency<=10 or not isfinite(a.timeout) or not 0<a.timeout<=60 or not isfinite(a.request_interval) or not 0<=a.request_interval<=60:
+        p.error("concurrency must be 1-10, timeout in (0, 60], and request interval in [0, 60]")
     if len(set(a.suite)) != len(a.suite):
         p.error("each suite may be selected only once")
     return a
