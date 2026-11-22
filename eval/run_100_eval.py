@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "results"
 SUITES = {
     "probes": [ROOT / "data/probes_60.json"],
-    "exim": [Path(os.environ["EXIM_DATASET_PATH"]) if os.environ.get("EXIM_DATASET_PATH") else ROOT.parent / "EXIM-AI-Evidence-Gated-Autonomy/data/exim_real_25.json"],
+    "exim": [Path(os.environ["EXIM_DATASET_PATH"]) if os.environ.get("EXIM_DATASET_PATH") else ROOT.parent / "EXIM-AI-Evidence-Gated-Autonomy/data/exim_synthetic_25.json"],
     "memory": [Path(os.environ["MEMORY_DATASET_PATH"]) if os.environ.get("MEMORY_DATASET_PATH") else ROOT.parent / "memory-governor/data/memory_15.json"],
 }
 DEFAULTS = {
