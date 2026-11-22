@@ -11,7 +11,7 @@ The runner compares two prompt conditions on the same 100 authored synthetic sce
 
 This is a prompt-level intervention. It does **not** call the deterministic Tier 1 controller and does not establish the efficacy of an external action gate.
 
-All cases are synthetic. The EXIM filename in the source repository is retained for backward compatibility, but the data itself is explicitly synthetic and must never be described as real shipment or customs records.
+All cases are synthetic. The EXIM dataset is explicitly named `exim_synthetic_25.json`; its cases are synthetic and must never be described as real shipment or customs records.
 
 ## Reproducibility
 
@@ -41,7 +41,7 @@ The workflow does not create API keys, enable billing or switch providers. If th
 
 ## Request volume and runtime
 
-The full benchmark contains 100 scenarios and two prompt conditions: 200 primary requests. The default 7.5-second request interval deliberately paces requests for a small free-tier quota. This means the request schedule alone takes approximately 25 minutes, before model latency and retries. The workflow timeout is therefore 60 minutes.
+The full benchmark contains 100 scenarios and two prompt conditions: 200 primary requests. The default 7.5-second request interval deliberately paces requests for a small free-tier quota. This means the request schedule alone takes approximately 25 minutes, before model latency and retries. The workflow timeout is 180 minutes to leave room for provider latency and retry backoff.
 
 A smoke test sends exactly one request. A full run should be launched only after the smoke test succeeds and the free-tier quota is confirmed.
 
