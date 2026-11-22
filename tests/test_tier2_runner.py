@@ -85,14 +85,14 @@ class Tier2DatasetTests(unittest.TestCase):
         self.assertEqual([m["role"] for m in groq["messages"]], ["user"])
         self.assertIn("\n\n", groq["messages"][0]["content"])
         self.assertNotIn("\\n", groq["messages"][0]["content"])
-        self.assertEqual(groq["max_completion_tokens"], 350)
+        self.assertEqual(groq["max_completion_tokens"], 700)
         self.assertNotIn("max_tokens", groq)
         openai = build_payload("openai", "gpt-4.1-mini", prompt)
         self.assertEqual([m["role"] for m in openai["messages"]], ["system", "user"])
-        self.assertEqual(openai["max_completion_tokens"], 350)
+        self.assertEqual(openai["max_completion_tokens"], 700)
         anthropic = build_payload("anthropic", "claude-haiku-4-5-20251001", prompt)
         self.assertEqual(anthropic["system"], "Follow evidence policy.")
-        self.assertEqual(anthropic["max_tokens"], 350)
+        self.assertEqual(anthropic["max_tokens"], 700)
 
     def test_retry_classifier_only_retries_groqs_specific_json_validation_400(self):
         groq_json_error = json.dumps({
