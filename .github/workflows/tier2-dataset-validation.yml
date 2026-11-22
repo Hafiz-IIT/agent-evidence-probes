@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
-      EXIM_DATASET_PATH: ${{ github.workspace }}/external/exim/data/exim_real_25.json
+      EXIM_DATASET_PATH: ${{ github.workspace }}/external/exim/data/exim_synthetic_25.json
       MEMORY_DATASET_PATH: ${{ github.workspace }}/external/memory/data/memory_15.json
     steps:
       - uses: actions/checkout@v4
