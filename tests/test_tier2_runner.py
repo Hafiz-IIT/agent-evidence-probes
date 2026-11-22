@@ -1,7 +1,7 @@
 import unittest
 import json
 
-from eval.run_100_eval import attempted_request_count, build_payload, config, load_cases, messages, parse_response, run_one
+from eval.run_100_eval import attempted_request_count, build_payload, config, is_retryable_error, load_cases, messages, parse_response, run_one
 from unittest.mock import patch
 
 
@@ -94,6 +94,23 @@ class Tier2DatasetTests(unittest.TestCase):
         self.assertEqual(anthropic["system"], "Follow evidence policy.")
         self.assertEqual(anthropic["max_tokens"], 350)
 
+    def test_retry_classifier_only_retries_groqs_specific_json_validation_400(self):
+        groq_json_error = json.dumps({
+            "error": {
+                "message": "Failed to validate JSON.",
+                "type": "invalid_request_error",
+                "code": "json_validate_failed",
+                "failed_generation": "",
+            }
+        })
+        self.assertTrue(is_retryable_error("groq", {"http_status": 400, "error": groq_json_error}))
+        self.assertFalse(is_retryable_error("groq", {"http_status": 400, "error": '{"error":{"code":"invalid_api_key"}}'}))
+        self.assertFalse(is_retryable_error("openai", {"http_status": 400, "error": groq_json_error}))
+        self.assertTrue(is_retryable_error("groq", {"http_status": 429, "error": "rate limited"}))
+        self.assertTrue(is_retryable_error("groq", {"http_status": 503, "error": "unavailable"}))
+        self.assertTrue(is_retryable_error("groq", {"error": "TimeoutError: timed out"}))
+        self.assertFalse(is_retryable_error("groq", {"http_status": 400, "error": "not JSON"}))
+
     def test_parse_response_accepts_only_declared_actions(self):
         self.assertEqual(parse_response('{"action":"ACT","reason":"supported"}')["action"], "ACT")
         self.assertEqual(parse_response('{"action":"ESCALATE","reason":"conflict"}')["action"], "ESCALATE")
@@ -119,7 +136,7 @@ class Tier2RetryTests(unittest.IsolatedAsyncioTestCase):
         first = {"ok": False, "http_status": 429, "error": "rate limited"}
         second = {"ok": True, "http_status": 200, "parsed": {"action": "ACT"}}
         with patch("eval.run_100_eval.asyncio.to_thread", new=AsyncMock(side_effect=[first, second])):
-            result = await run_one(asyncio.Semaphore(1), ("openai", "key", "url", "model"), case, "baseline", 5)
+            result = await run_one(asyncio.Semaphore(1), ("openai", "key", "url", "model"), case, "baseline", 5, 0)
         self.assertTrue(result["ok"])
         self.assertEqual(result["attempts"], 2)
         self.assertEqual(attempted_request_count([result]), 2)
