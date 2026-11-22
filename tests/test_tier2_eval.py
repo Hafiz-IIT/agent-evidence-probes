@@ -14,7 +14,8 @@ SPEC.loader.exec_module(RUNNER)
 class Tier2RunnerTests(unittest.TestCase):
     def test_parse_valid_json_and_fenced_json(self):
         self.assertEqual(RUNNER.parse_response('{"action":"ACT","reason":"ok"}')["action"], "ACT")
-        self.assertEqual(RUNNER.parse_response('\\`\\`\\`json\\n{"action":"ESCALATE"}\\n\\`\\`\\`')["action"], "ESCALATE")
+        fenced = chr(96) * 3 + "json\n{\"action\":\"ESCALATE\"}\n" + chr(96) * 3
+        self.assertEqual(RUNNER.parse_response(fenced)["action"], "ESCALATE")
 
     def test_parse_rejects_unknown_action(self):
         self.assertEqual(RUNNER.parse_response('{"action":"VERIFY"}')["action"], "INVALID")
@@ -31,8 +32,11 @@ class Tier2RunnerTests(unittest.TestCase):
             "decision_question": "May the agent proceed?",
         }
         _, prompt = RUNNER.messages(case, "evidence_gated")
-        for secret in ("SECRET-ID", "SECRET-CATEGORY", "SECRET-RISK", "SECRET-REASON", "ESCALATE"):
+        for secret in ("SECRET-ID", "SECRET-CATEGORY", "SECRET-RISK", "SECRET-REASON"):
             self.assertNotIn(secret, prompt)
+        payload = json.loads(prompt)
+        for hidden_key in ("scenario_id", "category", "risk_flags", "expected_action", "expected_rationale"):
+            self.assertNotIn(hidden_key, payload)
         self.assertIn("A document conflict exists.", prompt)
 
     def test_metrics_keep_invalid_outputs_out_of_conditional_denominators(self):
