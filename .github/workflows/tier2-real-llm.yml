@@ -42,12 +42,12 @@ jobs:
   evaluate:
     if: ${{ inputs.confirm_zero_spend == true }}
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 180
     env:
       LLM_PROVIDER: groq
       LLM_MODEL: ${{ inputs.model }}
       GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-      EXIM_DATASET_PATH: ${{ github.workspace }}/external/exim/data/exim_real_25.json
+      EXIM_DATASET_PATH: ${{ github.workspace }}/external/exim/data/exim_synthetic_25.json
       MEMORY_DATASET_PATH: ${{ github.workspace }}/external/memory/data/memory_15.json
       EVAL_SUITE: ${{ inputs.suite }}
     steps:
