@@ -154,6 +154,24 @@ def request_sync(provider, key, url, model, prompt, timeout):
                 "completed_at_utc":datetime.now(timezone.utc).isoformat(),
                 "latency_seconds":round(time.monotonic()-start,3),"error":f"{type(exc).__name__}: {exc}"}
 
+def is_retryable_error(provider: str, result: dict[str, Any]) -> bool:
+    """Retry transient transport/provider failures, plus Groq's specific JSON validator error."""
+    status = result.get("http_status")
+    error = str(result.get("error", ""))
+    if status in (429, 500, 502, 503, 504):
+        return True
+    if status is None and any(token in error for token in ("TimeoutError", "URLError", "ConnectionError")):
+        return True
+    if provider == "groq" and status == 400:
+        try:
+            payload = json.loads(error)
+        except (TypeError, ValueError):
+            return False
+        detail = payload.get("error", {}) if isinstance(payload, dict) else {}
+        return isinstance(detail, dict) and detail.get("code") == "json_validate_failed"
+    return False
+
+
 async def run_one(sem, cfg, case, mode, timeout, request_interval):
     provider,key,url,model = cfg
     prompt = messages(case, mode)
@@ -165,11 +183,7 @@ async def run_one(sem, cfg, case, mode, timeout, request_interval):
             # Serialize and pace requests to stay below small free-tier TPM limits.
             if request_interval:
                 await asyncio.sleep(request_interval)
-        status = result.get("http_status")
-        error = str(result.get("error", ""))
-        retryable = status in (429, 500, 502, 503, 504) or (
-            status is None and any(token in error for token in ("TimeoutError", "URLError", "ConnectionError"))
-        )
+        retryable = is_retryable_error(provider, result)
         if result.get("ok") or not retryable or attempts >= 3:
             break
         # 429 bodies commonly include a provider-suggested wait; use a conservative
