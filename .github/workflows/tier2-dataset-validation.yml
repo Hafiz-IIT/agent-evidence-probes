@@ -1,0 +1,37 @@
+name: Tier 2 dataset validation (no API calls)
+
+on:
+  push:
+    branches:
+      - fix/tier2-runner-workflow
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-datasets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      EXIM_DATASET_PATH: ${{ github.workspace }}/external/exim/data/exim_synthetic_25.json
+      MEMORY_DATASET_PATH: ${{ github.workspace }}/external/memory/data/memory_15.json
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: Hafiz-IIT/EXIM-AI-Evidence-Gated-Autonomy
+          ref: research/100-scenario-eval-suite
+          path: external/exim
+      - uses: actions/checkout@v4
+        with:
+          repository: Hafiz-IIT/memory-governor
+          ref: research/100-scenario-eval-suite
+          path: external/memory
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Validate all 100 synthetic scenarios without provider credentials
+        run: python eval/run_100_eval.py --validate-only
+      - name: Run Tier 2 unit tests
+        run: python -m unittest discover -s tests -v
