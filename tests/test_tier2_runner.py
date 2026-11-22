@@ -105,6 +105,14 @@ class Tier2DatasetTests(unittest.TestCase):
         })
         self.assertTrue(is_retryable_error("groq", {"http_status": 400, "error": groq_json_error}))
         self.assertFalse(is_retryable_error("groq", {"http_status": 400, "error": '{"error":{"code":"invalid_api_key"}}'}))
+        token_limit_error = json.dumps({
+            "error": {
+                "message": "Failed to generate JSON.",
+                "code": "json_validate_failed",
+                "failed_generation": "max completion tokens reached before generating a valid document",
+            }
+        })
+        self.assertFalse(is_retryable_error("groq", {"http_status": 400, "error": token_limit_error}))
         self.assertFalse(is_retryable_error("openai", {"http_status": 400, "error": groq_json_error}))
         self.assertTrue(is_retryable_error("groq", {"http_status": 429, "error": "rate limited"}))
         self.assertTrue(is_retryable_error("groq", {"http_status": 503, "error": "unavailable"}))
